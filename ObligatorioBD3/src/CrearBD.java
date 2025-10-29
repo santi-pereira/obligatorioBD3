@@ -77,8 +77,8 @@ public class CrearBD {
 
 			
 			//Agregar la primary key
-			stmt.executeUpdate("CREATE TABLE Productos(código VARCHAR(45), nombre VARCHAR(45), precio INT)");
-			stmt.executeUpdate("CREATE TABLE Ventas (número INT, codProd VARCHAR(45), unidades INT, cliente VARCHAR(45))");
+			stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Productos(código VARCHAR(45), nombre VARCHAR(45), precio INT)");
+			stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Ventas (número INT, codProd VARCHAR(45), unidades INT, cliente VARCHAR(45))");
 
 			System.out.println("Se creo todo");
 
