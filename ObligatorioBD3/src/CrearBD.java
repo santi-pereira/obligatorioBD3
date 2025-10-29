@@ -32,8 +32,11 @@ public class CrearBD {
 			stmt.executeUpdate("USE ObligatorioBD3");
 
 			//Agregar la primary key
-			stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Productos(código VARCHAR(45), nombre VARCHAR(45), precio INT)");
-			stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Ventas (número INT, codProd VARCHAR(45), unidades INT, cliente VARCHAR(45))");
+			stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Productos(codigo VARCHAR(45), nombre VARCHAR(45), precio INT)");
+			stmt.executeUpdate("ALTER TABLE Productos ADD CONSTRAINT pk_productos PRIMARY KEY (codigo);");
+			stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Ventas (numero INT, codProd VARCHAR(45), unidades INT, cliente VARCHAR(45))");
+			stmt.executeUpdate("ALTER TABLE Ventas ADD CONSTRAINT pk_ventas PRIMARY KEY (numero, codProd);");
+
 			
 			System.out.println("Se creo todo");
 
