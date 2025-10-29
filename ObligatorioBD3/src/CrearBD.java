@@ -72,7 +72,7 @@ public class CrearBD {
 
 			stmt.executeUpdate("CREATE TABLE  IF NOT EXISTS Ventas (número INT, codProd VARCHAR(45), unidades INT, cliente VARCHAR(45))");
 
-			stmt.executeUpdate("create database ObligatorioBD3");
+			stmt.executeUpdate("create database IF NOT EXISTS ObligatorioBD3");
 			stmt.executeUpdate("USE ObligatorioBD3");
 
 			
