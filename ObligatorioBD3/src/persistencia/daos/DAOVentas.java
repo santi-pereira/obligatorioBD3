@@ -14,6 +14,7 @@ public class DAOVentas {
 	public DAOVentas(String codProd) {
 		super();
 		this.codProd = codProd;
+		this.consultas = new Consultas();
 	}
 	
 	public void insback(Venta venta) {
