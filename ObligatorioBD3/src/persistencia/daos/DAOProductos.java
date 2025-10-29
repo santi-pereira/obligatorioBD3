@@ -23,23 +23,18 @@ public class DAOProductos {
 
 	public boolean member(String codP) throws excepcionErrorPersistencia {
 		boolean existe = false;
-
-		try {
-			Connection connection = AccesoBD.instanciarConexion();
-			PreparedStatement pStmt = connection.prepareStatement(consultas.obtenerProducto());
-
-			pStmt.setString(1, codP);
-
-			ResultSet resultSet = pStmt.executeQuery();
-
-			if (resultSet.next()) {
-				existe = true;
+ 
+		try (Connection connection = AccesoBD.instanciarConexion();
+				PreparedStatement pStmt = connection.prepareStatement(consultas.obtenerProducto())) {
+			    pStmt.setString(1, codP);
+			    try (ResultSet resultSet = pStmt.executeQuery()) {
+			    	if (resultSet.next()) {
+						existe = true;
+					}
+			    } 
+			} catch (SQLException e) {
+				throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
 			}
-
-		} catch (SQLException e) {
-			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
-		}
-
 		return existe;
 	}
 
