@@ -1,13 +1,6 @@
 package logica;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.Properties;
 
 import logica.excepciones.excepcionErrorPersistencia;
 import logica.excepciones.exceptionExisteCodigoProducto;
@@ -16,45 +9,26 @@ import logica.excepciones.exceptionNoExisteVenta;
 import logica.valueObjects.VOProducto;
 import logica.valueObjects.VOVenta;
 import logica.valueObjects.VOVentaTotal;
-import persistencia.AccesoBD;
 import persistencia.daos.DAOProductos;
 
 public class Fachada {
 
-	private String driver;
-	private String url;
-	private String user;
-	private String password;
-
-	public Fachada() throws excepcionErrorPersistencia {
-		Properties props = new Properties();
+	public Fachada() {
 		
-		try (InputStream input = Fachada.class.getClassLoader().getResourceAsStream("config.properties");) {
-			props.load(input);
-		} catch (FileNotFoundException exception) {
-			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
-		} catch (IOException exception) {
-			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
-		}
-
-		this.driver = props.getProperty("driver");
-		this.url = props.getProperty("url");
-		this.user = props.getProperty("user");
-		this.password = props.getProperty("password");
-		try {
-			Class.forName(driver);
-		} catch (ClassNotFoundException e1) {
-			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
-		}
 	}
 
+	private boolean existeProducto(String codP) throws excepcionErrorPersistencia {
+        DAOProductos daoProductos = new DAOProductos();
+        return daoProductos.member(codP);
+    }
+	
 	public void altaProducto(VOProducto VoP) throws exceptionExisteCodigoProducto, excepcionErrorPersistencia {
-		DAOProductos daoProductos = new DAOProductos();
 
 		try {
-			if (daoProductos.member(VoP.getCodigo()))
+			if (this.existeProducto(VoP.getCodigo()))
 				throw new exceptionExisteCodigoProducto("Ya existe un producto con el codigo indicado.");
 			else {
+				DAOProductos daoProductos = new DAOProductos();
 				Producto producto = new Producto(VoP.getCodigo(), VoP.getNombre(), VoP.getPrecio());
 				daoProductos.insert(producto);
 			}
@@ -64,40 +38,17 @@ public class Fachada {
 	}
 
 	public void bajaProducto(String codP) throws exceptionNoExisteProducto, excepcionErrorPersistencia {
-		Connection con = null;
-
-		try {
-
-			AccesoBD acc = new AccesoBD();
-
-			/* 1. cargo dinamicamente el driver de MySQL */
-			String driver = "com.mysql.jdbc.Driver";
-			Class.forName(driver);
-
-			/* 2. una vez cargado el driver, me conecto con la base de datos */
-			con = DriverManager.getConnection(this.url, this.user, this.password);
-
-			if (!acc.existeProducto(con, codP))
-				throw new exceptionNoExisteProducto("No existe el producto con el codigo indicado.");
-			else {
-				acc.bajaProductoVentas(con, codP);
-				acc.bajarVentasByCodProd(con, codP);
-			}
-
-		
-			con.close();
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			throw new excepcionErrorPersistencia("Error con la persistencia");
-		} finally {
-			try {
-				if (con != null)
-					con.close();
-			} catch (SQLException e) {
-				throw new excepcionErrorPersistencia("Error con la persistencia");
-			}
+		if (!this.existeProducto(codP))
+			throw new exceptionNoExisteProducto("No existe el producto con el codigo indicado.");
+		else {
+			// TODO: cambiar la implementacion 
+			// si queremos algo sobre la venta de un producto se debe acceder desde el producto
+			// si queremos algo sobre un producto directamente se debe acceder desde el daoProducto
+			// El DAOVentas no representa “todas las ventas del sistema”, sino las ventas asociadas a un solo producto.
+			// Por eso, el único que debería usarlo directamente es el propio Producto.
+			/*
+			 * acc.bajaProductoVentas(con, codP); acc.bajarVentasByCodProd(con, codP);
+			 */
 		}
 	}
 
@@ -109,40 +60,18 @@ public class Fachada {
 	 */
 
 	public void registroVenta(String codP, VOVenta voV) throws exceptionNoExisteProducto, excepcionErrorPersistencia {
-
-		Connection con = null;
-
-		try {
-
-			AccesoBD acc = new AccesoBD();
-
-			/* 1. cargo dinamicamente el driver de MySQL */
-			String driver = "com.mysql.jdbc.Driver";
-			Class.forName(driver);
-
-			/* 2. una vez cargado el driver, me conecto con la base de datos */
-			con = DriverManager.getConnection(this.url, this.user, this.password);
-
-			if (!acc.existeProducto(con, codP))
-				throw new exceptionNoExisteProducto("No existe el producto con el codigo indicado.");
-			else {
-				int codigo = acc.getCantidadVentasByProducto(con, codP);
-				acc.crearVenta(con, codigo, codP, voV.getUnidades(), voV.getCliente());
-			}
-
-			con.close();
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			throw new excepcionErrorPersistencia("Error con la persistencia");
-		} finally {
-			try {
-				if (con != null)
-					con.close();
-			} catch (SQLException e) {
-				throw new excepcionErrorPersistencia("Error con la persistencia");
-			}
+		if (!this.existeProducto(codP))
+			throw new exceptionNoExisteProducto("No existe el producto con el codigo indicado.");
+		else {
+			// TODO: cambiar la implementacion 
+			// si queremos algo sobre la venta de un producto se debe acceder desde el producto
+			// si queremos algo sobre un producto directamente se debe acceder desde el daoProducto
+			// El DAOVentas no representa “todas las ventas del sistema”, sino las ventas asociadas a un solo producto.
+			// Por eso, el único que debería usarlo directamente es el propio Producto.
+			/*
+			 * int codigo = acc.getCantidadVentasByProducto(con, codP); acc.crearVenta(con,
+			 * codigo, codP, voV.getUnidades(), voV.getCliente());
+			 */
 		}
 
 	}
@@ -156,44 +85,19 @@ public class Fachada {
 	
 	public VOVenta datosVenta(String codP, int numV) throws exceptionNoExisteVenta, excepcionErrorPersistencia
 	{
-		Connection con = null;
 		VOVenta resp = null;
-
-		try {
-
-			AccesoBD acc = new AccesoBD();
-
-			/* 1. cargo dinamicamente el driver de MySQL */
-			String driver = "com.mysql.jdbc.Driver";
-			Class.forName(driver);
-
-			/* 2. una vez cargado el driver, me conecto con la base de datos */
-			con = DriverManager.getConnection(this.url, this.user, this.password);
-
-			resp = acc.getDatosVenta(con, codP, numV);
-			if (resp == null)
-			{
-				throw new exceptionNoExisteVenta("No existe una venta con el codigo y numero indicado");
-			}
-			
-
-			con.close();
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			throw new excepcionErrorPersistencia("Error con la persistencia");
-		} finally {
-			try {
-				if (con != null)
-					con.close();
-			} catch (SQLException e) {
-				throw new excepcionErrorPersistencia("Error con la persistencia");
-			}
-		}
+		// TODO: cambiar la implementacion 
+		// si queremos algo sobre la venta de un producto se debe acceder desde el producto
+		// si queremos algo sobre un producto directamente se debe acceder desde el daoProducto
+		// El DAOVentas no representa “todas las ventas del sistema”, sino las ventas asociadas a un solo producto.
+		// Por eso, el único que debería usarlo directamente es el propio Producto.
+		/*
+		 * resp = acc.getDatosVenta(con, codP, numV); if (resp == null) { throw new
+		 * exceptionNoExisteVenta("No existe una venta con el codigo y numero indicado"
+		 * ); }
+		 */
 		
 		return resp;
-		
 	}
 	
 	
@@ -204,100 +108,40 @@ public class Fachada {
 	
 	public List<VOProducto> listadoProductos()throws excepcionErrorPersistencia
 	{
-		Connection con = null;
 		List<VOProducto> resp = null;
-
-		try {
-
-			AccesoBD acc = new AccesoBD();
-
-			/* 1. cargo dinamicamente el driver de MySQL */
-			String driver = "com.mysql.jdbc.Driver";
-			Class.forName(driver);
-
-			/* 2. una vez cargado el driver, me conecto con la base de datos */
-			con = DriverManager.getConnection(this.url, this.user, this.password);
-
-			resp = acc.listaProductos(con);
-			
-			con.close();
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			throw new excepcionErrorPersistencia("Error con la persistencia");
-		} finally {
-			try {
-				if (con != null)
-					con.close();
-			} catch (SQLException e) {
-				throw new excepcionErrorPersistencia("Error con la persistencia");
-			}
-		}
+		// TODO: cambiar la implementacion 
+		// si queremos algo sobre la venta de un producto se debe acceder desde el producto
+		// si queremos algo sobre un producto directamente se debe acceder desde el daoProducto
+		// El DAOVentas no representa “todas las ventas del sistema”, sino las ventas asociadas a un solo producto.
+		// Por eso, el único que debería usarlo directamente es el propio Producto.
+		/* resp = acc.listaProductos(con); */
 		
 		return resp;
 	}
 
 	public List<VOVentaTotal> listadoVentas(String codProd) throws excepcionErrorPersistencia {
 		List<VOVentaTotal> list = null;
-		Connection con = null;
-		try {
-
-			AccesoBD acc = new AccesoBD();
-
-			/* 1. cargo dinamicamente el driver de MySQL */
-			String driver = "com.mysql.jdbc.Driver";
-			Class.forName(driver);
-
-			/* 2. una vez cargado el driver, me conecto con la base de datos */
-			con = DriverManager.getConnection(this.url, this.user, this.password);
-
-			list = acc.listaVentas(con, codProd);
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			throw new excepcionErrorPersistencia("Error con la persistencia");
-		} finally {
-			try {
-				if (con != null)
-					con.close();
-			} catch (SQLException e) {
-				throw new excepcionErrorPersistencia("Error con la persistencia");
-			}
-		}
+		// TODO: cambiar la implementacion 
+		// si queremos algo sobre la venta de un producto se debe acceder desde el producto
+		// si queremos algo sobre un producto directamente se debe acceder desde el daoProducto
+		// El DAOVentas no representa “todas las ventas del sistema”, sino las ventas asociadas a un solo producto.
+		// Por eso, el único que debería usarlo directamente es el propio Producto.
+		/*
+		 * list = acc.listaVentas(con, codProd);
+		 */
 		
 		return list;
 	}
 	
 	public VOProducto productoMasUnidadesVendidas() throws excepcionErrorPersistencia {
-		VOProducto voProducto = null;Connection con = null;
-		try {
+		VOProducto voProducto = null;
+		// TODO: cambiar la implementacion 
+		// si queremos algo sobre la venta de un producto se debe acceder desde el producto
+		// si queremos algo sobre un producto directamente se debe acceder desde el daoProducto
+		// El DAOVentas no representa “todas las ventas del sistema”, sino las ventas asociadas a un solo producto.
+		// Por eso, el único que debería usarlo directamente es el propio Producto.
+		/* voProducto = acc.productoMasUnidadesVendidas(con); */
 
-			AccesoBD acc = new AccesoBD();
-
-			/* 1. cargo dinamicamente el driver de MySQL */
-			String driver = "com.mysql.jdbc.Driver";
-			Class.forName(driver);
-
-			/* 2. una vez cargado el driver, me conecto con la base de datos */
-			con = DriverManager.getConnection(this.url, this.user, this.password);
-
-			voProducto = acc.productoMasUnidadesVendidas(con);
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			throw new excepcionErrorPersistencia("Error con la persistencia");
-		} finally {
-			try {
-				if (con != null)
-					con.close();
-			} catch (SQLException e) {
-				throw new excepcionErrorPersistencia("Error con la persistencia");
-			}
-		}
-		
 		return voProducto;
 	}
 }

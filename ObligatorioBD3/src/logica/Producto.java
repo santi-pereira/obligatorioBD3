@@ -16,6 +16,7 @@ public class Producto {
 		this.codigo = codigo;
 		this.nombre = nombre;
 		this.precio = precio;
+	    this.secuencia = new DAOVentas(codigo);
 	}
 
 	public String getCodigo() {
@@ -31,25 +32,22 @@ public class Producto {
 	}
     
     public void agregarVenta(Venta venta) {
-    	// TODO: implementar
+    	this.secuencia.insback(venta);
     }
     
     public Venta obtenerVenta(int numVenta) {
-    	// TODO: implementar
-		return null;
+    	return this.secuencia.Kesimo(numVenta);
     }
     
     public void borrarVentas() {
-    	// TODO: implementar
+    	this.secuencia.borrarVenta();
     }
     
     public List<VOVentaTotal> listarVentas() {
-    	// TODO: implementar
-    	return null;
+    	return this.secuencia.listarVentas();
     }
     
     public double totalRecaudado() {
-    	// TODO: implementar
-    	return 0;
+    	return this.secuencia.totalRecaudado();
     }
 }

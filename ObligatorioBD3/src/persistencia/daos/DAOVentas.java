@@ -40,7 +40,7 @@ public class DAOVentas {
 		return null;
 	}
 	
-	public double totalRecaudao() {
+	public double totalRecaudado() {
 		// TODO: implementar
 		return 0;
 	}

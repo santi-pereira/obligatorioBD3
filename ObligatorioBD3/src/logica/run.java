@@ -10,25 +10,20 @@ public class run {
 	public static void main (String[] args)
 	{
 		Fachada fac;
-		try {
-			fac = new Fachada();
-			
-			try
-			{
-				List<VOProducto> lista = fac.listadoProductos();
-			
-				for (VOProducto voProducto : lista) {
-					System.out.println(voProducto.getCodigo());
-				}
-			
-			}catch(excepcionErrorPersistencia ex)
-			{
-				
-				
+		fac = new Fachada();
+		
+		try
+		{
+			List<VOProducto> lista = fac.listadoProductos();
+		
+			for (VOProducto voProducto : lista) {
+				System.out.println(voProducto.getCodigo());
 			}
-		} catch (excepcionErrorPersistencia e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
+		}catch(excepcionErrorPersistencia ex)
+		{
+			
+			
 		}
 	
 	}
