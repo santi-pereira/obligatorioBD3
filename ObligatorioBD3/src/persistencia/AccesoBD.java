@@ -67,18 +67,6 @@ public class AccesoBD {
 
 	/*
 	 *
-	 * public void crearProducto(Connection conn, String codigo, String nombre, int
-	 * precio) throws SQLException { String query =
-	 * this.consultas.insertarProducto(); PreparedStatement prs =
-	 * conn.prepareStatement(query);
-	 * 
-	 * prs.setString(1, codigo); prs.setString(2, nombre); prs.setInt(3, precio);
-	 * 
-	 * prs.execute();
-	 * 
-	 * prs.close();
-	 * 
-	 * }
 	 * 
 	 * public void bajaProductoVentas (Connection conn, String codigo)throws
 	 * SQLException { String query = this.consultas.bajaProducto();
@@ -96,34 +84,6 @@ public class AccesoBD {
 	 * 
 	 * prs.close(); }
 	 * 
-	 * public int getCantidadVentasByProducto (Connection conn, String codigo)
-	 * throws SQLException { int cantidad = 0;
-	 * 
-	 * String query = this.consultas.cantidadVentasByCodigoProducto();
-	 * PreparedStatement prs = conn.prepareStatement(query);
-	 * 
-	 * prs.setString(1, codigo);
-	 * 
-	 * ResultSet rs = prs.executeQuery(); if(rs.next()) cantidad =
-	 * rs.getInt("cantidad");
-	 * 
-	 * prs.close();
-	 * 
-	 * return cantidad; }
-	 * 
-	 * public void crearVenta(Connection conn, int numero, String codProd, int
-	 * unidades, String Cliente) throws SQLException { String query =
-	 * this.consultas.insertarVenta(); PreparedStatement prs =
-	 * conn.prepareStatement(query);
-	 * 
-	 * prs.setInt(1, numero); prs.setString(2, codProd); prs.setInt(3, unidades);
-	 * prs.setString(4, Cliente);
-	 * 
-	 * prs.execute();
-	 * 
-	 * prs.close();
-	 * 
-	 * }
 	 * 
 	 * public List<VOProducto> listaProductos (Connection conn) throws SQLException
 	 * { List<VOProducto> v = new ArrayList<VOProducto>();
