@@ -1,4 +1,4 @@
-package logicaPresentacion.excepciones;
+package logica.excepciones;
 
 public class exceptionNoExisteVenta extends Exception{
 	

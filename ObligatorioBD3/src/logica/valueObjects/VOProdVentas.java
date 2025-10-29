@@ -1,4 +1,4 @@
-package logicaPresentacion.valueObjects;
+package logica.valueObjects;
 
 public class VOProdVentas extends VOProducto{
 	

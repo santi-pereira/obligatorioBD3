@@ -1,12 +1,13 @@
-package logicaPresentacion.accesoBD;
+package persistencia;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import logicaPresentacion.valueObjects.VOProducto;
-import logicaPresentacion.valueObjects.VOVenta;
-import logicaPresentacion.valueObjects.VOVentaTotal;
+import logica.valueObjects.VOProducto;
+import logica.valueObjects.VOVenta;
+import logica.valueObjects.VOVentaTotal;
+import persistencia.consultas.Consultas;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
