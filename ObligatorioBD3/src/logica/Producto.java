@@ -2,6 +2,7 @@ package logica;
 
 import java.util.List;
 
+import logica.excepciones.excepcionErrorPersistencia;
 import logica.valueObjects.VOVentaTotal;
 import persistencia.daos.DAOVentas;
 
@@ -35,7 +36,7 @@ public class Producto {
     	this.secuencia.insback(venta);
     }
     
-    public Venta obtenerVenta(int numVenta) {
+    public Venta obtenerVenta(int numVenta) throws excepcionErrorPersistencia {
     	return this.secuencia.Kesimo(numVenta);
     }
     
