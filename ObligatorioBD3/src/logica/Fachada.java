@@ -33,9 +33,8 @@ public class Fachada {
 			if (this.existeProducto(VoP.getCodigo()))
 				throw new exceptionExisteCodigoProducto("Ya existe un producto con el codigo indicado.");
 			else {
-				DAOProductos daoProductos = new DAOProductos();
 				Producto producto = new Producto(VoP.getCodigo(), VoP.getNombre(), VoP.getPrecio());
-				daoProductos.insert(producto);
+				this.daoProducto.insert(producto);
 			}
 		} catch (excepcionErrorPersistencia e) {
 			throw new excepcionErrorPersistencia("Error con la persistencia");
@@ -80,25 +79,16 @@ public class Fachada {
 	 * venta el número siguiente al de la última venta registrada hasta el momento
 	 * para ese producto (si es la primera, tendrá el número 1).
 	 */
-
 	public void registroVenta(String codP, VOVenta voV) throws exceptionNoExisteProducto, excepcionErrorPersistencia {
 		if (!this.existeProducto(codP))
 			throw new exceptionNoExisteProducto("No existe el producto con el codigo indicado.");
 		else {
-			// TODO: cambiar la implementacion
-			// si queremos algo sobre la venta de un producto se debe acceder desde el
-			// producto
-			// si queremos algo sobre un producto directamente se debe acceder desde el
-			// daoProducto
-			// El DAOVentas no representa “todas las ventas del sistema”, sino las ventas
-			// asociadas a un solo producto.
-			// Por eso, el único que debería usarlo directamente es el propio Producto.
-			/*
-			 * int codigo = acc.getCantidadVentasByProducto(con, codP); acc.crearVenta(con,
-			 * codigo, codP, voV.getUnidades(), voV.getCliente());
-			 */
-		}
 
+			Producto producto = this.daoProducto.find(codP);
+			int numVenta = producto.cantidadVentas() + 1;
+			Venta venta = new Venta(numVenta, voV.getUnidades(), voV.getCliente());
+			producto.agregarVenta(venta);
+		}
 	}
 
 	/*
@@ -107,23 +97,21 @@ public class Fachada {
 	 * corresponde (chequeando que el código exista y tenga una venta con ese
 	 * número).
 	 * 
-	 */
-
-	public VOVenta datosVenta(String codP, int numV) throws exceptionNoExisteVenta, excepcionErrorPersistencia {
+	 * */
+	
+	public VOVenta datosVenta(String codP, int numV) throws exceptionNoExisteVenta, excepcionErrorPersistencia, exceptionNoExisteProducto
+	{
 		VOVenta resp = null;
-		// TODO: cambiar la implementacion
-		// si queremos algo sobre la venta de un producto se debe acceder desde el
-		// producto
-		// si queremos algo sobre un producto directamente se debe acceder desde el
-		// daoProducto
-		// El DAOVentas no representa “todas las ventas del sistema”, sino las ventas
-		// asociadas a un solo producto.
-		// Por eso, el único que debería usarlo directamente es el propio Producto.
-		/*
-		 * resp = acc.getDatosVenta(con, codP, numV); if (resp == null) { throw new
-		 * exceptionNoExisteVenta("No existe una venta con el codigo y numero indicado"
-		 * ); }
-		 */
+		if (!this.existeProducto(codP)) {
+			throw new exceptionNoExisteProducto("No existe el producto con el codigo indicado.");
+		}
+
+		Producto producto = this.daoProducto.find(codP);
+		Venta venta = producto.obtenerVenta(numV);
+		if (venta == null) {
+			throw new exceptionNoExisteVenta("No existe una venta con el codigo y numero indicado");
+		}
+		resp = new VOVenta(venta.getUnidades(), venta.getCliente());
 
 		return resp;
 	}
@@ -156,21 +144,13 @@ public class Fachada {
 		return resp;
 	}
 
-	public List<VOVentaTotal> listadoVentas(String codProd) throws excepcionErrorPersistencia {
-		List<VOVentaTotal> list = null;
-		// TODO: cambiar la implementacion
-		// si queremos algo sobre la venta de un producto se debe acceder desde el
-		// producto
-		// si queremos algo sobre un producto directamente se debe acceder desde el
-		// daoProducto
-		// El DAOVentas no representa “todas las ventas del sistema”, sino las ventas
-		// asociadas a un solo producto.
-		// Por eso, el único que debería usarlo directamente es el propio Producto.
-		/*
-		 * list = acc.listaVentas(con, codProd);
-		 */
-
-		return list;
+	public List<VOVentaTotal> listadoVentas(String codProd) throws excepcionErrorPersistencia, exceptionNoExisteProducto {
+		if (!this.existeProducto(codProd)) {
+			throw new exceptionNoExisteProducto("No existe el producto con el codigo indicado.");
+		}
+		Producto producto = this.daoProducto.find(codProd);
+		
+		return producto.listarVentas();
 	}
 
 	public VOProducto productoMasUnidadesVendidas() throws excepcionErrorPersistencia {
