@@ -18,9 +18,9 @@ public class DAOVentas {
 	private Consultas consultas;
 	private String codProd;
 
-	public DAOVentas(String codProd) {
+	public DAOVentas() {
 		super();
-		this.codProd = codProd;
+
 		this.consultas = new Consultas();
 	}
 	
@@ -71,10 +71,31 @@ public class DAOVentas {
 		
 		return venta;
 	}
-	
+
 	public void borrarVenta() {
 		// TODO: implementar
 	}
+
+	public void borrarVentasByProducto(String codProducto) throws excepcionErrorPersistencia{
+		try {
+			Connection connection = AccesoBD.instanciarConexion();
+
+			String query = this.consultas.bajarVentasByCodigoProducto();
+			PreparedStatement prs = connection.prepareStatement(query);
+
+			prs.setString(1, codProducto);
+			prs.execute();
+
+			prs.close();
+		} catch (SQLException ex) {
+			throw new excepcionErrorPersistencia("Error en la persistencia de los datos");
+		}
+
+	}
+
+	public List<VOVentaTotal> listarVentas() {
+		// TODO: implementar
+		return null;
 	
 	public List<VOVentaTotal> listarVentas() throws excepcionErrorPersistencia {
 		List<VOVentaTotal> list = new LinkedList<VOVentaTotal>();
@@ -96,7 +117,7 @@ public class DAOVentas {
 
 		 return list;
 	}
-	
+
 	public double totalRecaudado() {
 		// TODO: implementar
 		return 0;
