@@ -58,22 +58,15 @@ public class Fachada {
 	 * venta el número siguiente al de la última venta registrada hasta el momento
 	 * para ese producto (si es la primera, tendrá el número 1).
 	 */
-
 	public void registroVenta(String codP, VOVenta voV) throws exceptionNoExisteProducto, excepcionErrorPersistencia {
 		if (!this.existeProducto(codP))
 			throw new exceptionNoExisteProducto("No existe el producto con el codigo indicado.");
 		else {
-			// TODO: cambiar la implementacion 
-			// si queremos algo sobre la venta de un producto se debe acceder desde el producto
-			// si queremos algo sobre un producto directamente se debe acceder desde el daoProducto
-			// El DAOVentas no representa “todas las ventas del sistema”, sino las ventas asociadas a un solo producto.
-			// Por eso, el único que debería usarlo directamente es el propio Producto.
-			/*
-			 * int codigo = acc.getCantidadVentasByProducto(con, codP); acc.crearVenta(con,
-			 * codigo, codP, voV.getUnidades(), voV.getCliente());
-			 */
+			Producto producto = this.daoProducto.find(codP);
+			int numVenta = producto.cantidadVentas() + 1;
+			Venta venta = new Venta(numVenta, voV.getUnidades(), voV.getCliente());
+			producto.agregarVenta(venta);
 		}
-
 	}
 	
 	/*

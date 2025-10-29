@@ -31,8 +31,12 @@ public class Producto {
 	public int getPrecio() {
 		return precio;
 	}
+	
+	public int cantidadVentas() throws excepcionErrorPersistencia {
+		return this.secuencia.largo();
+	}
     
-    public void agregarVenta(Venta venta) {
+    public void agregarVenta(Venta venta) throws excepcionErrorPersistencia {
     	this.secuencia.insback(venta);
     }
     

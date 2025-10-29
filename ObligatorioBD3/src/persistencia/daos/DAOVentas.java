@@ -23,13 +23,33 @@ public class DAOVentas {
 		this.consultas = new Consultas();
 	}
 	
-	public void insback(Venta venta) {
-		// TODO: implementar
+	public void insback(Venta venta) throws excepcionErrorPersistencia {
+		try (Connection connection = AccesoBD.instanciarConexion();
+				PreparedStatement pStmt = connection.prepareStatement(this.consultas.insertarVenta())) {
+			pStmt.setInt(1, venta.getNumero());
+			pStmt.setString(2, this.codProd);
+			pStmt.setInt(3, venta.getUnidades());
+			pStmt.setString(4, venta.getCliente());
+			pStmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+		}
 	}
 	
-	public int largo() {
-		// TODO: implementar
-		return 0;
+	public int largo() throws excepcionErrorPersistencia {
+		int largo = 0;
+		try (Connection connection = AccesoBD.instanciarConexion();
+				PreparedStatement pStmt = connection.prepareStatement(this.consultas.cantidadVentasByCodigoProducto())) {
+			    pStmt.setString(1, this.codProd);
+			    try (ResultSet resultSet = pStmt.executeQuery()) {
+			    	if (resultSet.next()) {
+			    		largo = resultSet.getInt("cantidad"); 
+					}
+			    } 
+			} catch (SQLException e) {
+				throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+			}
+		return largo;
 	}
 	
 	public Venta Kesimo(int numVenta) throws excepcionErrorPersistencia {
