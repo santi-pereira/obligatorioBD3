@@ -12,10 +12,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-
 public class AccesoBD {
-	
-	
+
 	public boolean existeProducto(Connection conn, String codigo) throws SQLException
 	{
 		boolean existe = false;
@@ -198,5 +196,4 @@ public class AccesoBD {
 		
 		return v;
 	}
-	
 }

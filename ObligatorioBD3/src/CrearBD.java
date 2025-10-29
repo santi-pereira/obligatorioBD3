@@ -7,16 +7,13 @@ public class CrearBD {
 	
 	public static void main (String[] args)
 	{
-		//create();
+		create();
 		cargarDatos();
-		
 	}
-	
-	
+
 	public static void cargarDatos()
 	{
 		try {
-
 			/* 1. cargo dinamicamente el driver de MySQL */
 			String driver = "com.mysql.jdbc.Driver";
 			Class.forName(driver);
@@ -28,17 +25,11 @@ public class CrearBD {
 			/* 2. una vez cargado el driver, me conecto con la base de datos */
 			Connection con = DriverManager.getConnection(url, user, password);
 			
-
 			Statement stmt = con.createStatement();
 
-			
 			stmt.executeUpdate("USE Ejercicio2");
 
-			
-			
-
-			stmt.executeUpdate("CREATE TABLE Ventas (número INT, codProd VARCHAR(45), unidades INT, cliente VARCHAR(45))");
-
+			stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Ventas (número INT, codProd VARCHAR(45), unidades INT, cliente VARCHAR(45))");
 			
 			System.out.println("Se creo todo");
 
@@ -69,7 +60,7 @@ public class CrearBD {
 			Connection con = DriverManager.getConnection(url, user, password);
 			
 			Statement stmCreateBD = con.createStatement();
-			stmCreateBD.executeUpdate("Create Database Ejercicio2");
+			stmCreateBD.executeUpdate("Create Database IF NOT EXISTS Ejercicio2");
 			stmCreateBD.close();
 
 			Statement stmt = con.createStatement();
@@ -77,12 +68,10 @@ public class CrearBD {
 			//stmt.executeUpdate("CREATE DATABASE Escuela");
 			stmt.executeUpdate("USE Ejercicio2");
 
-			
-			stmt.executeUpdate("CREATE TABLE Productos(código VARCHAR(45), nombre VARCHAR(45), precio INT)");
+			stmt.executeUpdate("CREATE TABLE  IF NOT EXISTS Productos(código VARCHAR(45), nombre VARCHAR(45), precio INT)");
 
-			stmt.executeUpdate("CREATE TABLE Ventas (número INT, codProd VARCHAR(45), unidades INT, cliente VARCHAR(45))");
+			stmt.executeUpdate("CREATE TABLE  IF NOT EXISTS Ventas (número INT, codProd VARCHAR(45), unidades INT, cliente VARCHAR(45))");
 
-			
 			System.out.println("Se creo todo");
 
 			stmt.close();
@@ -94,5 +83,4 @@ public class CrearBD {
 			e.printStackTrace();
 		}
 	}
-
 }

@@ -5,14 +5,11 @@ public class VOVentaTotal extends VOVenta{
 	String codProd;
 	
 	public VOVentaTotal() {
-		// TODO Auto-generated constructor stub
 	}
 	
 
 	public VOVentaTotal(int unidades, String cliente, int numero, String codProd) {
-		super(unidades, cliente);
-		// TODO Auto-generated constructor stub
-		
+		super(unidades, cliente);		
 		this.numero = numero;
 		this.codProd = codProd;
 	}

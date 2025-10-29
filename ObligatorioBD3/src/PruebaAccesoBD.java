@@ -8,12 +8,10 @@ import java.sql.Statement;
 public class PruebaAccesoBD {
 	public static void main (String[] args)
 	{
-		
 		//CreateDatabase c = new CreateDatabase();
 		
 //		c.create();
-		
-		
+
 		try
 		{
 			String driver = "com.mysql.jdbc.Driver";
@@ -46,13 +44,9 @@ public class PruebaAccesoBD {
 			stmt.close();
 
 			con.close();
-		}
-		catch (ClassNotFoundException e)
-		{
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-		}
-		catch (SQLException e)
-		{
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}	
 		

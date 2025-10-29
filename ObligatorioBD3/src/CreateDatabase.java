@@ -4,13 +4,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-
-
 public class CreateDatabase {
 
 	public void create() {
 		try {
-
 			/* 1. cargo dinamicamente el driver de MySQL */
 			String driver = "com.mysql.jdbc.Driver";
 			Class.forName(driver);
@@ -21,8 +18,6 @@ public class CreateDatabase {
 
 			/* 2. una vez cargado el driver, me conecto con la base de datos */
 			Connection con = DriverManager.getConnection(url, user, password);
-			
-			
 
 			Statement stmt = con.createStatement();
 

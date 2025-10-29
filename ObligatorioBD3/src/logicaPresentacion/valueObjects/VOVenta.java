@@ -3,9 +3,8 @@ package logicaPresentacion.valueObjects;
 public class VOVenta {
 	int unidades;
 	String Cliente;
-	
+
 	public VOVenta() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public VOVenta(int unidades, String cliente) {
@@ -21,6 +20,4 @@ public class VOVenta {
 	public String getCliente() {
 		return Cliente;
 	}
-	
-	
 }

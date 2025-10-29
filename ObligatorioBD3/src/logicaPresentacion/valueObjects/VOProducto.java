@@ -4,7 +4,7 @@ public class VOProducto {
 	String codigo;
 	String nombre;
 	int precio;
-		
+
 	public VOProducto(String codigo, String nombre, int precio) {
 		super();
 		this.codigo = codigo;
@@ -23,8 +23,4 @@ public class VOProducto {
 	public int getPrecio() {
 		return precio;
 	}
-	
-	
-	
-	
 }
