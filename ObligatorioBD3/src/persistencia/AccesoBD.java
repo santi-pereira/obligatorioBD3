@@ -66,20 +66,7 @@ public class AccesoBD {
 	}
 
 	/*
-	 * public boolean existeProducto(Connection conn, String codigo) throws
-	 * SQLException { boolean existe = false;
-	 * 
-	 * String query = this.consultas.obtenerProducto(); PreparedStatement prs =
-	 * conn.prepareStatement(query);
-	 * 
-	 * prs.setString(1, codigo);
-	 * 
-	 * if(prs.executeQuery().next()) existe = true;
-	 * 
-	 * prs.close();
-	 * 
-	 * return existe; }
-	 * 
+	 *
 	 * public void crearProducto(Connection conn, String codigo, String nombre, int
 	 * precio) throws SQLException { String query =
 	 * this.consultas.insertarProducto(); PreparedStatement prs =
