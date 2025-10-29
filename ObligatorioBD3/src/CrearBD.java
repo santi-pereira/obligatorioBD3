@@ -7,7 +7,7 @@ public class CrearBD {
 	
 	public static void main (String[] args)
 	{
-		//create();
+		
 		cargarDatos();
 		
 	}
@@ -21,7 +21,7 @@ public class CrearBD {
 			String driver = "com.mysql.jdbc.Driver";
 			Class.forName(driver);
 			
-			String url = "jdbc:mysql://37.60.229.230:3306/Ejercicio2";
+			String url = "jdbc:mysql://37.60.229.230:3306/";
 	        String user = "ude";
 	        String password = "Inforopinfo1@";
 
@@ -32,10 +32,13 @@ public class CrearBD {
 			Statement stmt = con.createStatement();
 
 			
-			stmt.executeUpdate("USE Ejercicio2");
+			stmt.executeUpdate("create database ObligatorioBD3");
+			stmt.executeUpdate("USE ObligatorioBD3");
 
 			
 			
+
+			stmt.executeUpdate("CREATE TABLE Productos(código VARCHAR(45), nombre VARCHAR(45), precio INT)");
 
 			stmt.executeUpdate("CREATE TABLE Ventas (número INT, codProd VARCHAR(45), unidades INT, cliente VARCHAR(45))");
 
