@@ -10,6 +10,7 @@ public class DAOVentas {
 
 	private Consultas consultas;
 	private String codProd;
+
 	public DAOVentas(String codProd) {
 		super();
 		this.codProd = codProd;

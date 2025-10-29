@@ -3,21 +3,76 @@ package persistencia;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
+import logica.excepciones.excepcionErrorPersistencia;
 import logica.valueObjects.VOProducto;
 import logica.valueObjects.VOVenta;
 import logica.valueObjects.VOVentaTotal;
 import persistencia.consultas.Consultas;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class AccesoBD {
 	private Consultas consultas;
+	private static Connection connection = null;
 	
 	public AccesoBD() {
 		this.consultas = new Consultas();
+	}
+	
+	public static Connection instanciarConexion() throws excepcionErrorPersistencia {
+		try {
+			if (connection == null || connection.isClosed()) {
+				Properties props = new Properties();
+				
+				try (InputStream input = AccesoBD.class.getClassLoader().getResourceAsStream("config.properties");) {
+					props.load(input);
+				} catch (FileNotFoundException exception) {
+					throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+				} catch (IOException exception) {
+					throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+				}
+
+				String driver = props.getProperty("driver");
+				String url = props.getProperty("url");
+				String user = props.getProperty("user");
+				String password = props.getProperty("password");
+				try {
+					Class.forName(driver);
+				} catch (ClassNotFoundException e1) {
+					throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+				}
+				try {
+					connection = DriverManager.getConnection(url, user, password);
+				} catch (SQLException e) {
+					throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+				}
+			}
+		} catch (SQLException e) {
+			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+		} catch (excepcionErrorPersistencia e) {
+			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+		}
+
+		return connection;
+	}
+
+	// no se necesita cerrar en cada metodo que accede a DB, puede usarse cuando se cierra la aplicacion
+	public static void cerrarConexion() throws excepcionErrorPersistencia {
+		try {
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+			}
+		} catch (SQLException sqlE) {
+			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+		}
 	}
 
 	public boolean existeProducto(Connection conn, String codigo) throws SQLException
