@@ -1,9 +1,13 @@
 package logica;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Properties;
 
 import logica.excepciones.excepcionErrorPersistencia;
 import logica.excepciones.exceptionExisteCodigoProducto;
@@ -11,50 +15,51 @@ import logica.excepciones.exceptionNoExisteProducto;
 import logica.excepciones.exceptionNoExisteVenta;
 import logica.valueObjects.VOProducto;
 import logica.valueObjects.VOVenta;
+import logica.valueObjects.VOVentaTotal;
 import persistencia.AccesoBD;
+import persistencia.daos.DAOProductos;
 
 public class Fachada {
 
-	private String url = "jdbc:mysql://37.60.229.230:3306/Ejercicio2";
-	private String user = "ude";
-	private String password = "Inforopinfo1@";
+	private String driver;
+	private String url;
+	private String user;
+	private String password;
 
-	public Fachada() {
+	public Fachada() throws excepcionErrorPersistencia {
+		Properties props = new Properties();
+		
+		try (InputStream input = Fachada.class.getClassLoader().getResourceAsStream("config.properties");) {
+			props.load(input);
+		} catch (FileNotFoundException exception) {
+			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+		} catch (IOException exception) {
+			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+		}
 
+		this.driver = props.getProperty("driver");
+		this.url = props.getProperty("url");
+		this.user = props.getProperty("user");
+		this.password = props.getProperty("password");
+		try {
+			Class.forName(driver);
+		} catch (ClassNotFoundException e1) {
+			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+		}
 	}
 
 	public void altaProducto(VOProducto VoP) throws exceptionExisteCodigoProducto, excepcionErrorPersistencia {
-		Connection con = null;
+		DAOProductos daoProductos = new DAOProductos();
 
 		try {
-
-			AccesoBD acc = new AccesoBD();
-
-			/* 1. cargo dinamicamente el driver de MySQL */
-			String driver = "com.mysql.jdbc.Driver";
-			Class.forName(driver);
-
-			/* 2. una vez cargado el driver, me conecto con la base de datos */
-			con = DriverManager.getConnection(url, user, password);
-
-			if (acc.existeProducto(con, VoP.getCodigo()))
+			if (daoProductos.member(VoP.getCodigo()))
 				throw new exceptionExisteCodigoProducto("Ya existe un producto con el codigo indicado.");
-			else
-				acc.crearProducto(con, VoP.getCodigo(), VoP.getNombre(), VoP.getPrecio());
-
-			con.close();
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			throw new excepcionErrorPersistencia("Error con la persistencia");
-		} finally {
-			try {
-				if (con != null)
-					con.close();
-			} catch (SQLException e) {
-
+			else {
+				Producto producto = new Producto(VoP.getCodigo(), VoP.getNombre(), VoP.getPrecio());
+				daoProductos.insert(producto);
 			}
+		} catch (excepcionErrorPersistencia e) {
+			throw new excepcionErrorPersistencia("Error con la persistencia");
 		}
 	}
 
@@ -70,7 +75,7 @@ public class Fachada {
 			Class.forName(driver);
 
 			/* 2. una vez cargado el driver, me conecto con la base de datos */
-			con = DriverManager.getConnection(url, user, password);
+			con = DriverManager.getConnection(this.url, this.user, this.password);
 
 			if (!acc.existeProducto(con, codP))
 				throw new exceptionNoExisteProducto("No existe el producto con el codigo indicado.");
@@ -91,7 +96,7 @@ public class Fachada {
 				if (con != null)
 					con.close();
 			} catch (SQLException e) {
-
+				throw new excepcionErrorPersistencia("Error con la persistencia");
 			}
 		}
 	}
@@ -116,7 +121,7 @@ public class Fachada {
 			Class.forName(driver);
 
 			/* 2. una vez cargado el driver, me conecto con la base de datos */
-			con = DriverManager.getConnection(url, user, password);
+			con = DriverManager.getConnection(this.url, this.user, this.password);
 
 			if (!acc.existeProducto(con, codP))
 				throw new exceptionNoExisteProducto("No existe el producto con el codigo indicado.");
@@ -136,7 +141,7 @@ public class Fachada {
 				if (con != null)
 					con.close();
 			} catch (SQLException e) {
-
+				throw new excepcionErrorPersistencia("Error con la persistencia");
 			}
 		}
 
@@ -163,7 +168,7 @@ public class Fachada {
 			Class.forName(driver);
 
 			/* 2. una vez cargado el driver, me conecto con la base de datos */
-			con = DriverManager.getConnection(url, user, password);
+			con = DriverManager.getConnection(this.url, this.user, this.password);
 
 			resp = acc.getDatosVenta(con, codP, numV);
 			if (resp == null)
@@ -183,7 +188,7 @@ public class Fachada {
 				if (con != null)
 					con.close();
 			} catch (SQLException e) {
-
+				throw new excepcionErrorPersistencia("Error con la persistencia");
 			}
 		}
 		
@@ -211,7 +216,7 @@ public class Fachada {
 			Class.forName(driver);
 
 			/* 2. una vez cargado el driver, me conecto con la base de datos */
-			con = DriverManager.getConnection(url, user, password);
+			con = DriverManager.getConnection(this.url, this.user, this.password);
 
 			resp = acc.listaProductos(con);
 			
@@ -226,10 +231,73 @@ public class Fachada {
 				if (con != null)
 					con.close();
 			} catch (SQLException e) {
-
+				throw new excepcionErrorPersistencia("Error con la persistencia");
 			}
 		}
 		
 		return resp;
+	}
+
+	public List<VOVentaTotal> listadoVentas(String codProd) throws excepcionErrorPersistencia {
+		List<VOVentaTotal> list = null;
+		Connection con = null;
+		try {
+
+			AccesoBD acc = new AccesoBD();
+
+			/* 1. cargo dinamicamente el driver de MySQL */
+			String driver = "com.mysql.jdbc.Driver";
+			Class.forName(driver);
+
+			/* 2. una vez cargado el driver, me conecto con la base de datos */
+			con = DriverManager.getConnection(this.url, this.user, this.password);
+
+			list = acc.listaVentas(con, codProd);
+
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			throw new excepcionErrorPersistencia("Error con la persistencia");
+		} finally {
+			try {
+				if (con != null)
+					con.close();
+			} catch (SQLException e) {
+				throw new excepcionErrorPersistencia("Error con la persistencia");
+			}
+		}
+		
+		return list;
+	}
+	
+	public VOProducto productoMasUnidadesVendidas() throws excepcionErrorPersistencia {
+		VOProducto voProducto = null;Connection con = null;
+		try {
+
+			AccesoBD acc = new AccesoBD();
+
+			/* 1. cargo dinamicamente el driver de MySQL */
+			String driver = "com.mysql.jdbc.Driver";
+			Class.forName(driver);
+
+			/* 2. una vez cargado el driver, me conecto con la base de datos */
+			con = DriverManager.getConnection(this.url, this.user, this.password);
+
+			voProducto = acc.productoMasUnidadesVendidas(con);
+
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			throw new excepcionErrorPersistencia("Error con la persistencia");
+		} finally {
+			try {
+				if (con != null)
+					con.close();
+			} catch (SQLException e) {
+				throw new excepcionErrorPersistencia("Error con la persistencia");
+			}
+		}
+		
+		return voProducto;
 	}
 }

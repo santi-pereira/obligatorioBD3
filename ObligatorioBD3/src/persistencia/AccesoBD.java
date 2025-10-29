@@ -14,14 +14,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class AccesoBD {
+	private Consultas consultas;
+	
+	public AccesoBD() {
+		this.consultas = new Consultas();
+	}
 
 	public boolean existeProducto(Connection conn, String codigo) throws SQLException
 	{
 		boolean existe = false;
 		
-		Consultas consultas = new Consultas();
-		
-		String query = consultas.obtenerProducto();
+		String query = this.consultas.obtenerProducto();
 		PreparedStatement prs = conn.prepareStatement(query);
 		
 		prs.setString(1, codigo);
@@ -36,9 +39,7 @@ public class AccesoBD {
 	
 	public void crearProducto(Connection conn, String codigo, String nombre, int precio) throws SQLException
 	{
-		Consultas consultas = new Consultas();
-		
-		String query = consultas.insertarProducto();
+		String query = this.consultas.insertarProducto();
 		PreparedStatement prs = conn.prepareStatement(query);
 		
 		prs.setString(1, codigo);
@@ -53,9 +54,7 @@ public class AccesoBD {
 	
 	public void bajaProductoVentas (Connection conn, String codigo)throws SQLException
 	{
-		Consultas consultas = new Consultas();
-		
-		String query = consultas.bajaProducto();
+		String query = this.consultas.bajaProducto();
 		PreparedStatement prs = conn.prepareStatement(query);
 		
 		prs.setString(1, codigo);
@@ -66,9 +65,7 @@ public class AccesoBD {
 	
 	public void bajarVentasByCodProd(Connection conn, String codigo)throws SQLException
 	{
-		Consultas consultas = new Consultas();
-		
-		String query = consultas.bajarVentasByCodigoProducto();
+		String query = this.consultas.bajarVentasByCodigoProducto();
 		PreparedStatement prs = conn.prepareStatement(query);
 		
 		prs.setString(1, codigo);
@@ -80,10 +77,8 @@ public class AccesoBD {
 	public int getCantidadVentasByProducto (Connection conn, String codigo) throws SQLException
 	{
 		int cantidad = 0;
-		
-		Consultas consultas = new Consultas();
-		
-		String query = consultas.cantidadVentasByCodigoProducto();
+
+		String query = this.consultas.cantidadVentasByCodigoProducto();
 		PreparedStatement prs = conn.prepareStatement(query);
 		
 		prs.setString(1, codigo);
@@ -99,9 +94,7 @@ public class AccesoBD {
 	
 	public void crearVenta(Connection conn, int numero, String codProd, int unidades, String Cliente) throws SQLException
 	{
-		Consultas consultas = new Consultas();
-		
-		String query = consultas.insertarVenta();
+		String query = this.consultas.insertarVenta();
 		PreparedStatement prs = conn.prepareStatement(query);
 
 		prs.setInt(1, numero);
@@ -119,9 +112,7 @@ public class AccesoBD {
 	{
 		VOVenta v = null;
 		
-		Consultas consultas = new Consultas();
-		
-		String query = consultas.obtenerDatosVenta();
+		String query = this.consultas.obtenerDatosVenta();
 		PreparedStatement prs = conn.prepareStatement(query);
 		
 		prs.setString(1, codigo);
@@ -144,9 +135,7 @@ public class AccesoBD {
 	{
 		List<VOProducto> v = new ArrayList<VOProducto>();
 		
-		Consultas consultas = new Consultas();
-		
-		String query = consultas.obtenerProductos();
+		String query = this.consultas.obtenerProductos();
 		PreparedStatement prs = conn.prepareStatement(query);
 		
 
@@ -172,9 +161,7 @@ public class AccesoBD {
 	{
 		List<VOVentaTotal> v = new ArrayList<VOVentaTotal>();
 		
-		Consultas consultas = new Consultas();
-		
-		String query = consultas.obtenerVentasByCodigoP();
+		String query = this.consultas.obtenerVentasByCodigoP();
 		PreparedStatement prs = conn.prepareStatement(query);
 		
 		prs.setString(1, codP);
@@ -196,5 +183,10 @@ public class AccesoBD {
 		prs.close();
 		
 		return v;
+	}
+
+	// TODO: implementar este metodo.
+	public VOProducto productoMasUnidadesVendidas(Connection conn) throws SQLException {
+		return null;
 	}
 }

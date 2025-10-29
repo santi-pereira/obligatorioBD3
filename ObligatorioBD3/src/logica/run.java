@@ -9,20 +9,26 @@ public class run {
 
 	public static void main (String[] args)
 	{
-		Fachada fac = new Fachada();
-		
-		try
-		{
-			List<VOProducto> lista = fac.listadoProductos();
-		
-			for (VOProducto voProducto : lista) {
-				System.out.println(voProducto.getCodigo());
+		Fachada fac;
+		try {
+			fac = new Fachada();
+			
+			try
+			{
+				List<VOProducto> lista = fac.listadoProductos();
+			
+				for (VOProducto voProducto : lista) {
+					System.out.println(voProducto.getCodigo());
+				}
+			
+			}catch(excepcionErrorPersistencia ex)
+			{
+				
+				
 			}
-		
-		}catch(excepcionErrorPersistencia ex)
-		{
-			
-			
+		} catch (excepcionErrorPersistencia e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	
 	}
