@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 
 import logica.Venta;
@@ -75,9 +76,25 @@ public class DAOVentas {
 		// TODO: implementar
 	}
 	
-	public List<VOVentaTotal> listarVentas() {
-		// TODO: implementar
-		return null;
+	public List<VOVentaTotal> listarVentas() throws excepcionErrorPersistencia {
+		List<VOVentaTotal> list = new LinkedList<VOVentaTotal>();
+		try (Connection connection = AccesoBD.instanciarConexion();
+			PreparedStatement pStmt = connection.prepareStatement(this.consultas.obtenerVentasByCodigoP())) {
+		    pStmt.setString(1, this.codProd);
+		    try (ResultSet resultSet = pStmt.executeQuery()) {
+		    	while (resultSet.next()) {
+		    		int numero = resultSet.getInt("numero");
+		    		String cod = resultSet.getString("codProd"); 
+		    		int unidades = resultSet.getInt("unidades"); 
+		    		String cliente = resultSet.getString("Cliente");
+		    		list.add(new VOVentaTotal(unidades, cliente, numero, cod));
+				}
+		    } 
+		} catch (SQLException e) {
+			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+		}
+
+		 return list;
 	}
 	
 	public double totalRecaudado() {

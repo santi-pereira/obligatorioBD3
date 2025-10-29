@@ -106,28 +106,6 @@ public class AccesoBD {
 	 * 
 	 * return v; }
 	 * 
-	 * public List<VOVentaTotal> listaVentas (Connection conn, String codP) throws
-	 * SQLException { List<VOVentaTotal> v = new ArrayList<VOVentaTotal>();
-	 * 
-	 * String query = this.consultas.obtenerVentasByCodigoP(); PreparedStatement prs
-	 * = conn.prepareStatement(query);
-	 * 
-	 * prs.setString(1, codP);
-	 * 
-	 * ResultSet rs = prs.executeQuery();
-	 * 
-	 * while(rs.next()) { // codigo, precio, nombre
-	 * 
-	 * int numero = rs.getInt("numero"); String cod = rs.getString("codProd"); int
-	 * unidades = rs.getInt("unidades"); String cliente = rs.getString("Cliente");
-	 * 
-	 * 
-	 * v.add(new VOVentaTotal(unidades, cliente, numero, cod)); }
-	 * 
-	 * prs.close();
-	 * 
-	 * return v; }
-	 * 
 	 * // TODO: implementar este metodo. public VOProducto
 	 * productoMasUnidadesVendidas(Connection conn) throws SQLException { return
 	 * null; }
