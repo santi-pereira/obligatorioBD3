@@ -18,7 +18,7 @@ public class CrearBD {
 			String driver = "com.mysql.jdbc.Driver";
 			Class.forName(driver);
 			
-			String url = "jdbc:mysql://37.60.229.230:3306/Ejercicio2";
+			String url = "jdbc:mysql://37.60.229.230:3306/";
 	        String user = "ude";
 	        String password = "Inforopinfo1@";
 
@@ -71,6 +71,14 @@ public class CrearBD {
 			stmt.executeUpdate("CREATE TABLE  IF NOT EXISTS Productos(código VARCHAR(45), nombre VARCHAR(45), precio INT)");
 
 			stmt.executeUpdate("CREATE TABLE  IF NOT EXISTS Ventas (número INT, codProd VARCHAR(45), unidades INT, cliente VARCHAR(45))");
+
+			stmt.executeUpdate("create database ObligatorioBD3");
+			stmt.executeUpdate("USE ObligatorioBD3");
+
+			
+			//Agregar la primary key
+			stmt.executeUpdate("CREATE TABLE Productos(código VARCHAR(45), nombre VARCHAR(45), precio INT)");
+			stmt.executeUpdate("CREATE TABLE Ventas (número INT, codProd VARCHAR(45), unidades INT, cliente VARCHAR(45))");
 
 			System.out.println("Se creo todo");
 

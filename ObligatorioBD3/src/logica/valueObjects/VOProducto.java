@@ -1,4 +1,4 @@
-package logicaPresentacion.valueObjects;
+package logica.valueObjects;
 
 public class VOProducto {
 	String codigo;

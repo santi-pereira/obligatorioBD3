@@ -1,17 +1,17 @@
-package logicaPresentacion;
+package logica;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 
-import logicaPresentacion.accesoBD.AccesoBD;
-import logicaPresentacion.excepciones.excepcionErrorPersistencia;
-import logicaPresentacion.excepciones.exceptionExisteCodigoProducto;
-import logicaPresentacion.excepciones.exceptionNoExisteProducto;
-import logicaPresentacion.excepciones.exceptionNoExisteVenta;
-import logicaPresentacion.valueObjects.VOProducto;
-import logicaPresentacion.valueObjects.VOVenta;
+import logica.excepciones.excepcionErrorPersistencia;
+import logica.excepciones.exceptionExisteCodigoProducto;
+import logica.excepciones.exceptionNoExisteProducto;
+import logica.excepciones.exceptionNoExisteVenta;
+import logica.valueObjects.VOProducto;
+import logica.valueObjects.VOVenta;
+import persistencia.AccesoBD;
 
 public class Fachada {
 

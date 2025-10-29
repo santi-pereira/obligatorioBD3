@@ -1,9 +1,9 @@
-package logicaPresentacion;
+package logica;
 
 import java.util.List;
 
-import logicaPresentacion.excepciones.excepcionErrorPersistencia;
-import logicaPresentacion.valueObjects.VOProducto;
+import logica.excepciones.excepcionErrorPersistencia;
+import logica.valueObjects.VOProducto;
 
 public class run {
 
