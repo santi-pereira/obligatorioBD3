@@ -14,11 +14,11 @@ import persistencia.daos.DAOVentas;
 
 public class Fachada {
 
-	DAOProductos daoProductos;
+	DAOProductos daoProducto;
 	DAOVentas daoVentas;
 
 	public Fachada() {
-		daoProductos = new DAOProductos();
+		daoProducto = new DAOProductos();
 		daoVentas = new DAOVentas();
 	}
 
@@ -26,7 +26,7 @@ public class Fachada {
 		DAOProductos daoProductos = new DAOProductos();
 		return daoProductos.member(codP);
 	}
-
+ 
 	public void altaProducto(VOProducto VoP) throws exceptionExisteCodigoProducto, excepcionErrorPersistencia {
 
 		try {
@@ -51,7 +51,7 @@ public class Fachada {
 			existProd = this.existeProducto(codP);
 			
 			if(existProd) {
-				daoProductos.delete(codP);
+				this.daoProducto.delete(codP);
 				daoVentas.borrarVentasByProducto(codP);
 			}
 		} catch (Exception e) {
@@ -128,7 +128,7 @@ public class Fachada {
 		String msgError = "";
 		try {
 			
-			resp = daoProductos.listarProductos();
+			resp = this.daoProducto.listarProductos();
 			
 		}catch(Exception e)
 		{

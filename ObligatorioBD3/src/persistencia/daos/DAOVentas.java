@@ -93,9 +93,6 @@ public class DAOVentas {
 
 	}
 
-	public List<VOVentaTotal> listarVentas() {
-		// TODO: implementar
-		return null;
 	
 	public List<VOVentaTotal> listarVentas() throws excepcionErrorPersistencia {
 		List<VOVentaTotal> list = new LinkedList<VOVentaTotal>();
