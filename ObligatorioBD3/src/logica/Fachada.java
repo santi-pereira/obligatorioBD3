@@ -112,18 +112,13 @@ public class Fachada {
 		return resp;
 	}
 
-	public List<VOVentaTotal> listadoVentas(String codProd) throws excepcionErrorPersistencia {
-		List<VOVentaTotal> list = null;
-		// TODO: cambiar la implementacion 
-		// si queremos algo sobre la venta de un producto se debe acceder desde el producto
-		// si queremos algo sobre un producto directamente se debe acceder desde el daoProducto
-		// El DAOVentas no representa “todas las ventas del sistema”, sino las ventas asociadas a un solo producto.
-		// Por eso, el único que debería usarlo directamente es el propio Producto.
-		/*
-		 * list = acc.listaVentas(con, codProd);
-		 */
+	public List<VOVentaTotal> listadoVentas(String codProd) throws excepcionErrorPersistencia, exceptionNoExisteProducto {
+		if (!this.existeProducto(codProd)) {
+			throw new exceptionNoExisteProducto("No existe el producto con el codigo indicado.");
+		}
+		Producto producto = this.daoProducto.find(codProd);
 		
-		return list;
+		return producto.listarVentas();
 	}
 	
 	public VOProducto productoMasUnidadesVendidas() throws excepcionErrorPersistencia {

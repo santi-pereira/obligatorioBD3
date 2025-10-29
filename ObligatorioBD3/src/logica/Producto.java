@@ -48,7 +48,7 @@ public class Producto {
     	this.secuencia.borrarVenta();
     }
     
-    public List<VOVentaTotal> listarVentas() {
+    public List<VOVentaTotal> listarVentas() throws excepcionErrorPersistencia {
     	return this.secuencia.listarVentas();
     }
     
