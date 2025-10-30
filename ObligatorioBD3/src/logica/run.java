@@ -10,7 +10,7 @@ public class run {
 
 	public static void main (String[] args)
 	{
-		Fachada fac;
+		Fachada fac = null;
 		try {
 			fac = new Fachada();
 		} catch (RemoteException e) {
