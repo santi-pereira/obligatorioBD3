@@ -2,6 +2,8 @@ package logica;
 
 import java.util.List;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import logica.excepciones.excepcionErrorPersistencia;
 import logica.excepciones.exceptionExisteCodigoProducto;
 import logica.excepciones.exceptionNoExisteProducto;
@@ -11,20 +13,25 @@ import logica.valueObjects.VOVenta;
 import logica.valueObjects.VOVentaTotal;
 import persistencia.daos.DAOProductos;
 
-public class Fachada {
+public class Fachada extends UnicastRemoteObject implements IFachada {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	DAOProductos daoProducto;
 
-	public Fachada() {
+	public Fachada() throws RemoteException, excepcionErrorPersistencia {
 		daoProducto = new DAOProductos();
 	}
 
-	private boolean existeProducto(String codP) throws excepcionErrorPersistencia {
+	private boolean existeProducto(String codP) throws RemoteException, excepcionErrorPersistencia {
 		DAOProductos daoProductos = new DAOProductos();
 		return daoProductos.member(codP);
 	}
  
-	public void altaProducto(VOProducto VoP) throws exceptionExisteCodigoProducto, excepcionErrorPersistencia {
+	public void altaProducto(VOProducto VoP) throws RemoteException, exceptionExisteCodigoProducto, excepcionErrorPersistencia {
 
 		try {
 			if (this.existeProducto(VoP.getCodigo()))
@@ -38,7 +45,7 @@ public class Fachada {
 		}
 	}
 
-	public void bajaProducto(String codP) throws exceptionNoExisteProducto, excepcionErrorPersistencia {
+	public void bajaProducto(String codP) throws RemoteException, exceptionNoExisteProducto, excepcionErrorPersistencia {
 
 		boolean existProd = false; 
 		boolean errorPersistencia = false;
@@ -77,7 +84,7 @@ public class Fachada {
 	 * venta el número siguiente al de la última venta registrada hasta el momento
 	 * para ese producto (si es la primera, tendrá el número 1).
 	 */
-	public void registroVenta(String codP, VOVenta voV) throws exceptionNoExisteProducto, excepcionErrorPersistencia {
+	public void registroVenta(String codP, VOVenta voV) throws RemoteException, exceptionNoExisteProducto, excepcionErrorPersistencia {
 		if (!this.existeProducto(codP))
 			throw new exceptionNoExisteProducto("No existe el producto con el codigo indicado.");
 		else {
@@ -96,7 +103,7 @@ public class Fachada {
 	 * número).
 	 * 
 	 * */
-	public VOVenta datosVenta(String codP, int numV) throws exceptionNoExisteVenta, excepcionErrorPersistencia, exceptionNoExisteProducto
+	public VOVenta datosVenta(String codP, int numV) throws RemoteException, exceptionNoExisteVenta, excepcionErrorPersistencia, exceptionNoExisteProducto
 	{
 		VOVenta resp = null;
 		if (!this.existeProducto(codP)) {
@@ -119,7 +126,7 @@ public class Fachada {
 	 * 
 	 */
 
-	public List<VOProducto> listadoProductos() throws excepcionErrorPersistencia {
+	public List<VOProducto> listadoProductos() throws RemoteException, excepcionErrorPersistencia {
 		List<VOProducto> resp = null;
 		boolean errPer = false;
 		String msgError = "";
@@ -141,7 +148,7 @@ public class Fachada {
 		return resp;
 	}
 
-	public List<VOVentaTotal> listadoVentas(String codProd) throws excepcionErrorPersistencia, exceptionNoExisteProducto {
+	public List<VOVentaTotal> listadoVentas(String codProd) throws RemoteException, excepcionErrorPersistencia, exceptionNoExisteProducto {
 		if (!this.existeProducto(codProd)) {
 			throw new exceptionNoExisteProducto("No existe el producto con el codigo indicado.");
 		}
@@ -150,7 +157,7 @@ public class Fachada {
 		return producto.listarVentas();
 	}
 
-	public VOProducto productoMasUnidadesVendidas() throws excepcionErrorPersistencia, exceptionNoExisteProducto {
+	public VOProducto productoMasUnidadesVendidas() throws RemoteException, excepcionErrorPersistencia, exceptionNoExisteProducto {
 		boolean esVacio = this.daoProducto.esVacio();
 		if (esVacio) {
 			throw new exceptionNoExisteProducto("No existe ningun producto registrado en el sistema.");
@@ -159,7 +166,7 @@ public class Fachada {
 		return this.daoProducto.productoMasVendido();
 	}
 	
-	public double totalRecaudadoPorVentas(String codProd) throws exceptionNoExisteProducto, excepcionErrorPersistencia {
+	public double totalRecaudadoPorVentas(String codProd) throws RemoteException, exceptionNoExisteProducto, excepcionErrorPersistencia {
 		if (!this.existeProducto(codProd)) {
 			throw new exceptionNoExisteProducto("No existe el producto con el codigo indicado.");
 		}

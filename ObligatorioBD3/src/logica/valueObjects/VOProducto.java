@@ -1,6 +1,8 @@
 package logica.valueObjects;
 
-public class VOProducto {
+import java.io.Serializable;
+
+public class VOProducto implements Serializable{
 	String codigo;
 	String nombre;
 	int precio;
