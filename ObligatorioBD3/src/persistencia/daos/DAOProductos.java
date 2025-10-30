@@ -46,7 +46,7 @@ public class DAOProductos {
 		    pStmt.setString(1, producto.getCodigo());
 		    pStmt.setString(2, producto.getNombre());
 		    pStmt.setInt(3, producto.getPrecio());
-		    pStmt.executeQuery();
+		    pStmt.executeUpdate();
 		} catch (SQLException e) {
 			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
 		}

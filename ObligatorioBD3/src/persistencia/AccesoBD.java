@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import logica.excepciones.excepcionErrorPersistencia;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,12 +23,23 @@ public class AccesoBD {
 			if (connection == null || connection.isClosed()) {
 				Properties props = new Properties();
 				
-				try (InputStream input = AccesoBD.class.getClassLoader().getResourceAsStream("config.properties");) {
+				/*try (InputStream input = AccesoBD.class.getClassLoader().getResourceAsStream("././resources/config.properties");) {
+					
+					
 					props.load(input);
 				} catch (FileNotFoundException exception) {
 					throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
 				} catch (IOException exception) {
 					throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+				}*/
+				try {
+
+					String nomArchProperties = "././resources/config.properties";
+					props.load(new FileInputStream(nomArchProperties));
+					
+
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
 
 				String driver = props.getProperty("driver");

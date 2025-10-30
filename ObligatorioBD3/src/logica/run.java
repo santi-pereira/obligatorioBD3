@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 import logica.excepciones.excepcionErrorPersistencia;
+import logica.excepciones.exceptionExisteCodigoProducto;
 import logica.valueObjects.VOProducto;
 
 public class run {
@@ -23,17 +24,23 @@ public class run {
 		
 		try
 		{
-			List<VOProducto> lista = fac.listadoProductos();
+			
+			fac.altaProducto(new VOProducto("prodPrueba", "Producto de Prueba", 100));
+			
+			/*List<VOProducto> lista = fac.listadoProductos();
 		
 			for (VOProducto voProducto : lista) {
 				System.out.println(voProducto.getCodigo());
-			}
+			}*/
 		
 		}catch(excepcionErrorPersistencia ex)
 		{
 			
 			
 		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (exceptionExisteCodigoProducto e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
