@@ -96,7 +96,6 @@ public class Fachada {
 	 * número).
 	 * 
 	 * */
-	
 	public VOVenta datosVenta(String codP, int numV) throws exceptionNoExisteVenta, excepcionErrorPersistencia, exceptionNoExisteProducto
 	{
 		VOVenta resp = null;
@@ -151,19 +150,13 @@ public class Fachada {
 		return producto.listarVentas();
 	}
 
-	public VOProducto productoMasUnidadesVendidas() throws excepcionErrorPersistencia {
-		VOProducto voProducto = null;
-		// TODO: cambiar la implementacion
-		// si queremos algo sobre la venta de un producto se debe acceder desde el
-		// producto
-		// si queremos algo sobre un producto directamente se debe acceder desde el
-		// daoProducto
-		// El DAOVentas no representa “todas las ventas del sistema”, sino las ventas
-		// asociadas a un solo producto.
-		// Por eso, el único que debería usarlo directamente es el propio Producto.
-		/* voProducto = acc.productoMasUnidadesVendidas(con); */
+	public VOProducto productoMasUnidadesVendidas() throws excepcionErrorPersistencia, exceptionNoExisteProducto {
+		boolean esVacio = this.daoProducto.esVacio();
+		if (esVacio) {
+			throw new exceptionNoExisteProducto("No existe ningun producto registrado en el sistema.");
+		}
 
-		return voProducto;
+		return this.daoProducto.productoMasVendido();
 	}
 	
 	public double totalRecaudadoPorVentas(String codProd) throws exceptionNoExisteProducto, excepcionErrorPersistencia {
