@@ -10,16 +10,13 @@ import logica.valueObjects.VOProducto;
 import logica.valueObjects.VOVenta;
 import logica.valueObjects.VOVentaTotal;
 import persistencia.daos.DAOProductos;
-import persistencia.daos.DAOVentas;
 
 public class Fachada {
 
 	DAOProductos daoProducto;
-	DAOVentas daoVentas;
 
 	public Fachada() {
 		daoProducto = new DAOProductos();
-		daoVentas = new DAOVentas();
 	}
 
 	private boolean existeProducto(String codP) throws excepcionErrorPersistencia {
@@ -49,10 +46,11 @@ public class Fachada {
 		
 		try {
 			existProd = this.existeProducto(codP);
+			Producto producto = this.daoProducto.find(codP);
 			
 			if(existProd) {
+				producto.borrarVentas();
 				this.daoProducto.delete(codP);
-				daoVentas.borrarVentasByProducto(codP);
 			}
 		} catch (Exception e) {
 			errorPersistencia = true;
@@ -166,5 +164,13 @@ public class Fachada {
 		/* voProducto = acc.productoMasUnidadesVendidas(con); */
 
 		return voProducto;
+	}
+	
+	public double totalRecaudadoPorVentas(String codProd) throws exceptionNoExisteProducto, excepcionErrorPersistencia {
+		if (!this.existeProducto(codProd)) {
+			throw new exceptionNoExisteProducto("No existe el producto con el codigo indicado.");
+		}
+		Producto producto = this.daoProducto.find(codProd);
+		return producto.totalRecaudado();
 	}
 }
