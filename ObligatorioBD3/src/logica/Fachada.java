@@ -12,17 +12,18 @@ import logica.valueObjects.VOVentaTotal;
 import persistencia.daos.DAOProductos;
 
 public class Fachada {
-	DAOProductos daoProducto = null;
+
+	DAOProductos daoProducto;
+
 	public Fachada() {
-		if (this.daoProducto == null) {
-			 daoProducto = new DAOProductos();
-		}
+		daoProducto = new DAOProductos();
 	}
 
 	private boolean existeProducto(String codP) throws excepcionErrorPersistencia {
-        return this.daoProducto.member(codP);
-    }
-	
+		DAOProductos daoProductos = new DAOProductos();
+		return daoProductos.member(codP);
+	}
+ 
 	public void altaProducto(VOProducto VoP) throws exceptionExisteCodigoProducto, excepcionErrorPersistencia {
 
 		try {
@@ -38,18 +39,36 @@ public class Fachada {
 	}
 
 	public void bajaProducto(String codP) throws exceptionNoExisteProducto, excepcionErrorPersistencia {
-		if (!this.existeProducto(codP))
-			throw new exceptionNoExisteProducto("No existe el producto con el codigo indicado.");
-		else {
-			// TODO: cambiar la implementacion 
-			// si queremos algo sobre la venta de un producto se debe acceder desde el producto
-			// si queremos algo sobre un producto directamente se debe acceder desde el daoProducto
-			// El DAOVentas no representa “todas las ventas del sistema”, sino las ventas asociadas a un solo producto.
-			// Por eso, el único que debería usarlo directamente es el propio Producto.
-			/*
-			 * acc.bajaProductoVentas(con, codP); acc.bajarVentasByCodProd(con, codP);
-			 */
+
+		boolean existProd = false; 
+		boolean errorPersistencia = false;
+		String msgError = "";
+		
+		try {
+			existProd = this.existeProducto(codP);
+			Producto producto = this.daoProducto.find(codP);
+			
+			if(existProd) {
+				producto.borrarVentas();
+				this.daoProducto.delete(codP);
+			}
+		} catch (Exception e) {
+			errorPersistencia = true;
+			msgError = "Error de acceso a los datos.";
+		}finally {
+			
+			if(existProd)
+			{
+				throw new exceptionNoExisteProducto("El producto " + codP + " no existe.");
+			}
+			
+			if(errorPersistencia)
+			{
+				throw new excepcionErrorPersistencia(msgError);
+			}
+			
 		}
+
 	}
 
 	/*
@@ -62,17 +81,19 @@ public class Fachada {
 		if (!this.existeProducto(codP))
 			throw new exceptionNoExisteProducto("No existe el producto con el codigo indicado.");
 		else {
+
 			Producto producto = this.daoProducto.find(codP);
 			int numVenta = producto.cantidadVentas() + 1;
 			Venta venta = new Venta(numVenta, voV.getUnidades(), voV.getCliente());
 			producto.agregarVenta(venta);
 		}
 	}
-	
+
 	/*
-	 * El método datosVenta devuelve la cantidad de unidades y el cliente correspondiente a una venta,
-		dados su número y el código del producto que le corresponde (chequeando que el código exista y
-		tenga una venta con ese número).
+	 * El método datosVenta devuelve la cantidad de unidades y el cliente
+	 * correspondiente a una venta, dados su número y el código del producto que le
+	 * corresponde (chequeando que el código exista y tenga una venta con ese
+	 * número).
 	 * 
 	 * */
 	
@@ -92,23 +113,32 @@ public class Fachada {
 
 		return resp;
 	}
-	
-	
+
 	/**
-	 * El método listadoProductos devuelve un listado de todos los productos, ordenado por código.
+	 * El método listadoProductos devuelve un listado de todos los productos,
+	 * ordenado por código.
 	 * 
-	 * */
-	
-	public List<VOProducto> listadoProductos()throws excepcionErrorPersistencia
-	{
+	 */
+
+	public List<VOProducto> listadoProductos() throws excepcionErrorPersistencia {
 		List<VOProducto> resp = null;
-		// TODO: cambiar la implementacion 
-		// si queremos algo sobre la venta de un producto se debe acceder desde el producto
-		// si queremos algo sobre un producto directamente se debe acceder desde el daoProducto
-		// El DAOVentas no representa “todas las ventas del sistema”, sino las ventas asociadas a un solo producto.
-		// Por eso, el único que debería usarlo directamente es el propio Producto.
-		/* resp = acc.listaProductos(con); */
-		
+		boolean errPer = false;
+		String msgError = "";
+		try {
+			
+			resp = this.daoProducto.listarProductos();
+			
+		}catch(Exception e)
+		{
+			errPer = true;
+			msgError ="Error de acceso a los datos.";
+		}finally {
+			if(errPer)
+			{
+				throw new excepcionErrorPersistencia(msgError);
+			}
+		}
+
 		return resp;
 	}
 
@@ -120,13 +150,16 @@ public class Fachada {
 		
 		return producto.listarVentas();
 	}
-	
+
 	public VOProducto productoMasUnidadesVendidas() throws excepcionErrorPersistencia {
 		VOProducto voProducto = null;
-		// TODO: cambiar la implementacion 
-		// si queremos algo sobre la venta de un producto se debe acceder desde el producto
-		// si queremos algo sobre un producto directamente se debe acceder desde el daoProducto
-		// El DAOVentas no representa “todas las ventas del sistema”, sino las ventas asociadas a un solo producto.
+		// TODO: cambiar la implementacion
+		// si queremos algo sobre la venta de un producto se debe acceder desde el
+		// producto
+		// si queremos algo sobre un producto directamente se debe acceder desde el
+		// daoProducto
+		// El DAOVentas no representa “todas las ventas del sistema”, sino las ventas
+		// asociadas a un solo producto.
 		// Por eso, el único que debería usarlo directamente es el propio Producto.
 		/* voProducto = acc.productoMasUnidadesVendidas(con); */
 
