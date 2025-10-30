@@ -132,4 +132,12 @@ public class Fachada {
 
 		return voProducto;
 	}
+	
+	public double totalRecaudadoPorVentas(String codProd) throws exceptionNoExisteProducto, excepcionErrorPersistencia {
+		if (!this.existeProducto(codProd)) {
+			throw new exceptionNoExisteProducto("No existe el producto con el codigo indicado.");
+		}
+		Producto producto = this.daoProducto.find(codProd);
+		return producto.totalRecaudado();
+	}
 }

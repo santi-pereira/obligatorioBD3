@@ -97,8 +97,19 @@ public class DAOVentas {
 		 return list;
 	}
 	
-	public double totalRecaudado() {
-		// TODO: implementar
-		return 0;
+	public double totalRecaudado() throws excepcionErrorPersistencia { // obtenerTotalRecaudadoVentas
+		double totalUnidadesVendidas = 0;
+		try (Connection connection = AccesoBD.instanciarConexion();
+			PreparedStatement pStmt = connection.prepareStatement(this.consultas.obtenerVentasByCodigoP())) {
+		    pStmt.setString(1, this.codProd);
+		    try (ResultSet resultSet = pStmt.executeQuery()) {
+		    	if (resultSet.next()) {
+		    		totalUnidadesVendidas = resultSet.getInt("total");
+				}
+		    } 
+		} catch (SQLException e) {
+			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+		}
+		return totalUnidadesVendidas;
 	}
 }
