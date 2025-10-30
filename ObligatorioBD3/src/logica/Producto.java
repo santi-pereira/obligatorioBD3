@@ -44,7 +44,7 @@ public class Producto {
     	return this.secuencia.Kesimo(numVenta);
     }
     
-    public void borrarVentas() {
+    public void borrarVentas() throws excepcionErrorPersistencia {
     	this.secuencia.borrarVenta();
     }
     
