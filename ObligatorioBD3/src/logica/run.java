@@ -1,5 +1,6 @@
 package logica;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
 import logica.excepciones.excepcionErrorPersistencia;
@@ -10,7 +11,15 @@ public class run {
 	public static void main (String[] args)
 	{
 		Fachada fac;
-		fac = new Fachada();
+		try {
+			fac = new Fachada();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (excepcionErrorPersistencia e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		try
 		{
@@ -24,6 +33,9 @@ public class run {
 		{
 			
 			
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	
 	}
