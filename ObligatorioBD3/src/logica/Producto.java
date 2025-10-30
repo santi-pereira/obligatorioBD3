@@ -52,7 +52,7 @@ public class Producto {
     	return this.secuencia.listarVentas();
     }
     
-    public double totalRecaudado() {
-    	return this.secuencia.totalRecaudado();
+    public double totalRecaudado() throws excepcionErrorPersistencia {
+    	return this.secuencia.totalRecaudado() * this.precio;
     }
 }

@@ -18,10 +18,10 @@ public class DAOVentas {
 	private Consultas consultas;
 	private String codProd;
 
-	public DAOVentas() {
+	public DAOVentas(String codProd) {
 		super();
-
 		this.consultas = new Consultas();
+		this.codProd = codProd;
 	}
 	
 	public void insback(Venta venta) throws excepcionErrorPersistencia {
@@ -76,14 +76,14 @@ public class DAOVentas {
 		// TODO: implementar
 	}
 
-	public void borrarVentasByProducto(String codProducto) throws excepcionErrorPersistencia{
+	public void borrarVentasByProducto() throws excepcionErrorPersistencia{
 		try {
 			Connection connection = AccesoBD.instanciarConexion();
 
 			String query = this.consultas.bajarVentasByCodigoProducto();
 			PreparedStatement prs = connection.prepareStatement(query);
 
-			prs.setString(1, codProducto);
+			prs.setString(1, this.codProd);
 			prs.execute();
 
 			prs.close();
@@ -114,9 +114,20 @@ public class DAOVentas {
 
 		 return list;
 	}
-
-	public double totalRecaudado() {
-		// TODO: implementar
-		return 0;
+	
+	public double totalRecaudado() throws excepcionErrorPersistencia { // obtenerTotalRecaudadoVentas
+		double totalUnidadesVendidas = 0;
+		try (Connection connection = AccesoBD.instanciarConexion();
+			PreparedStatement pStmt = connection.prepareStatement(this.consultas.obtenerVentasByCodigoP())) {
+		    pStmt.setString(1, this.codProd);
+		    try (ResultSet resultSet = pStmt.executeQuery()) {
+		    	if (resultSet.next()) {
+		    		totalUnidadesVendidas = resultSet.getInt("total");
+				}
+		    } 
+		} catch (SQLException e) {
+			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+		}
+		return totalUnidadesVendidas;
 	}
 }

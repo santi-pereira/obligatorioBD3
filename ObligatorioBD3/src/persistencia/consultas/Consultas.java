@@ -51,4 +51,9 @@ public class Consultas {
 	{
 		return "SELECT * FROM Ventas WHERE codProd = ? ORDER BY codigo";	
 	}
+	
+	public String obtenerTotalRecaudadoVentas()
+	{
+		return "SELECT SUM(unidades) as total FROM Ventas v WHERE codProd = ? ;";
+	}
 }
