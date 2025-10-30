@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,13 +39,37 @@ public class DAOProductos {
 		return existe;
 	}
 
-	public void insert(Producto producto) {
-		// TODO: implementar
+	public void insert(Producto producto) throws excepcionErrorPersistencia {
+		try (Connection connection = AccesoBD.instanciarConexion();
+			PreparedStatement pStmt = connection.prepareStatement(consultas.insertarProducto())) {
+			// (codigo, nombre, precio)
+		    pStmt.setString(1, producto.getCodigo());
+		    pStmt.setString(2, producto.getNombre());
+		    pStmt.setInt(3, producto.getPrecio());
+		    pStmt.executeQuery();
+		} catch (SQLException e) {
+			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+		}
 	}
 
-	public Producto find(String codP) {
-		// TODO: implementar
-		return null;
+	public Producto find(String codP) throws excepcionErrorPersistencia {
+		Producto producto = null;
+		 
+		try (Connection connection = AccesoBD.instanciarConexion();
+			PreparedStatement pStmt = connection.prepareStatement(consultas.obtenerProducto())) {
+			pStmt.setString(1, codP);
+		    try (ResultSet resultSet = pStmt.executeQuery()) {
+		    	if (resultSet.next()) {
+					String codigo = resultSet.getString("codigo");
+					String nombre = resultSet.getString("nombre");
+					int precio = resultSet.getInt("precio");
+					producto = new Producto(codigo, nombre, precio);
+				}
+		    } 
+		} catch (SQLException e) {
+			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+		}
+		return producto;
 	}
 
 	public void delete(String codP) throws excepcionErrorPersistencia {
@@ -66,9 +91,23 @@ public class DAOProductos {
 
 	}
 
-	public boolean esVacio() {
-		// TODO: implementar
-		return false;
+	public boolean esVacio() throws excepcionErrorPersistencia {
+		boolean esVacio = true;
+		try (Connection connection = AccesoBD.instanciarConexion();
+			Statement stmt = connection.createStatement()) {
+		    try (ResultSet resultSet = stmt.executeQuery(consultas.obtenerTotalProductos())) {
+		    	if (resultSet.next()) {
+		    		int total = resultSet.getInt("total");
+		    		if (total > 0) {
+			    		esVacio = false;
+		    		}
+				}
+		    } 
+		} catch (SQLException e) {
+			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+		}
+		
+		return esVacio;
 	}
 
 	public List<VOProducto> listarProductos() throws excepcionErrorPersistencia {
@@ -100,8 +139,23 @@ public class DAOProductos {
 		return resp;
 	}
 
-	public VOProdVentas productoMasVendido() {
-		// TODO: implementar
-		return null;
+	public VOProdVentas productoMasVendido() throws excepcionErrorPersistencia {
+		VOProdVentas voProdVentas = null;
+		try (Connection connection = AccesoBD.instanciarConexion();
+			Statement stmt = connection.createStatement()) {
+		    try (ResultSet resultSet = stmt.executeQuery(consultas.obtenerProductoMasUnidadesVendidas())) {
+		    	if (resultSet.next()) { // String codigo, String nombre, int precio, int unidadesVendidas
+		    		String codigo = resultSet.getString("codigo");
+		    		String nombre = resultSet.getString("nombre");
+		    		int precio = resultSet.getInt("precio");
+		    		int unidadesVendidas = resultSet.getInt("total_unidades");
+		    		voProdVentas = new VOProdVentas(codigo, nombre, precio, unidadesVendidas);
+				}
+		    } 
+		} catch (SQLException e) {
+			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+		}
+
+		return voProdVentas;
 	}
 }

@@ -1,6 +1,8 @@
 package logica.valueObjects;
 
-public class VOVenta {
+import java.io.Serializable;
+
+public class VOVenta implements Serializable{
 	int unidades;
 	String Cliente;
 

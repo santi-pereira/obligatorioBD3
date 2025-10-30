@@ -1,6 +1,8 @@
 package logica.valueObjects;
 
-public class VOVentaTotal extends VOVenta{
+import java.io.Serializable;
+
+public class VOVentaTotal extends VOVenta implements Serializable{
 	int numero;
 	String codProd;
 	
