@@ -39,7 +39,6 @@ public class CrearBD {
 
 			
 			System.out.println("Se creo todo");
-			System.out.println("PRUEBA");
 
 			stmt.close();
 			con.close();
