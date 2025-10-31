@@ -30,7 +30,7 @@ public class ConexionRMI {
 		try
 		{ 
 			Properties p = new Properties();
-			String nomArchProperties = "./resources/config.properties";
+			String nomArchProperties = "./././resources/config.properties";
 			p.load(new FileInputStream(nomArchProperties));
 			ipServ = p.getProperty("ipServidor");
 			puerto = p.getProperty("puertoServidor"); 
