@@ -8,6 +8,7 @@ import logica.excepciones.excepcionErrorPersistencia;
 import logica.excepciones.exceptionExisteCodigoProducto;
 import logica.excepciones.exceptionNoExisteProducto;
 import logica.excepciones.exceptionNoExisteVenta;
+import logica.valueObjects.VOProdVentas;
 import logica.valueObjects.VOProducto;
 import logica.valueObjects.VOVenta;
 import logica.valueObjects.VOVentaTotal;
@@ -27,8 +28,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 	}
 
 	private boolean existeProducto(String codP) throws RemoteException, excepcionErrorPersistencia {
-		DAOProductos daoProductos = new DAOProductos();
-		return daoProductos.member(codP);
+		return daoProducto.member(codP);
 	}
  
 	public void altaProducto(VOProducto VoP) throws RemoteException, exceptionExisteCodigoProducto, excepcionErrorPersistencia {
@@ -157,7 +157,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 		return producto.listarVentas();
 	}
 
-	public VOProducto productoMasUnidadesVendidas() throws RemoteException, excepcionErrorPersistencia, exceptionNoExisteProducto {
+	public VOProdVentas productoMasUnidadesVendidas() throws RemoteException, excepcionErrorPersistencia, exceptionNoExisteProducto {
 		boolean esVacio = this.daoProducto.esVacio();
 		if (esVacio) {
 			throw new exceptionNoExisteProducto("No existe ningun producto registrado en el sistema.");

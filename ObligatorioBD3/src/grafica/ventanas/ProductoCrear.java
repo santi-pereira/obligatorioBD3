@@ -24,7 +24,7 @@ public class ProductoCrear extends JInternalFrame {
 	
 	private JTextField txtCodigo;
 	private JTextField txtNombre;
-	private JFormattedTextField txtPrecio;
+	private JTextField txtPrecio;
 
 	/**
 	 * Launch the application.
@@ -70,11 +70,21 @@ public class ProductoCrear extends JInternalFrame {
 		getContentPane().add(txtNombre);
 		txtNombre.setColumns(10);
 		
-		txtPrecio = new JFormattedTextField(NumberFormat.getIntegerInstance());
-		
+		txtPrecio = new JTextField();		
 		txtPrecio.setBounds(79, 92, 341, 26);
 		getContentPane().add(txtPrecio);
 		txtPrecio.setColumns(10);
+		
+		
+		txtPrecio.addKeyListener(new java.awt.event.KeyAdapter() {
+		    @Override
+		    public void keyTyped(java.awt.event.KeyEvent e) {
+		        char c = e.getKeyChar();
+		        if (!Character.isDigit(c) && c != '\b') {
+		            e.consume();
+		        }
+		    }
+		});
 		
 		JLabel lblNewLabel_2 = new JLabel("Precio:");
 		lblNewLabel_2.setBounds(6, 97, 61, 16);
