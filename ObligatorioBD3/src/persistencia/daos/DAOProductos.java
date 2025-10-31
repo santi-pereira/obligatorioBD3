@@ -81,7 +81,7 @@ public class DAOProductos {
 			PreparedStatement prs = connection.prepareStatement(query);
 
 			prs.setString(1, codP);
-			prs.execute();
+			prs.executeUpdate();
 
 			prs.close();
 
