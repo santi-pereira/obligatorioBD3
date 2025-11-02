@@ -7,8 +7,6 @@ import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-
-import grafica.controladores.ControladorProductoCrear;
 import grafica.controladores.ControladorVentaRegistrar;
 import javax.swing.JButton;
 
