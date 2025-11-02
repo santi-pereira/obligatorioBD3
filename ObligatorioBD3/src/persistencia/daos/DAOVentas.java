@@ -112,7 +112,7 @@ public class DAOVentas {
 	public double totalRecaudado() throws excepcionErrorPersistencia { // obtenerTotalRecaudadoVentas
 		double totalUnidadesVendidas = 0;
 		try (Connection connection = AccesoBD.instanciarConexion();
-			PreparedStatement pStmt = connection.prepareStatement(this.consultas.obtenerVentasByCodigoP())) {
+			PreparedStatement pStmt = connection.prepareStatement(this.consultas.obtenerTotalRecaudadoVentas())) {
 		    pStmt.setString(1, this.codProd);
 		    try (ResultSet resultSet = pStmt.executeQuery()) {
 		    	if (resultSet.next()) {
@@ -120,6 +120,7 @@ public class DAOVentas {
 				}
 		    } 
 		} catch (SQLException e) {
+			e.printStackTrace();
 			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
 		}
 		return totalUnidadesVendidas;
