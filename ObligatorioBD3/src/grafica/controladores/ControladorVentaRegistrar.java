@@ -46,7 +46,7 @@ public class ControladorVentaRegistrar extends ConexionRMI {
 			} catch (RemoteException e) {
 				ventana.mostrarError("Problemas de conexion al servidor"); 
 			} catch (exceptionNoExisteProducto e) {
-				ventana.mostrarError("Ya existe un producto con el codigo ingresado."); 
+				ventana.mostrarError("No existe un producto con el codigo ingresado."); 
 			} catch (excepcionErrorPersistencia e) {
 				ventana.mostrarError("Existe un problema con el acceso a los datos");
 			}

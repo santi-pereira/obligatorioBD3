@@ -64,7 +64,7 @@ public class Consultas {
 	
 	public String obtenerProductoMasUnidadesVendidas() {
 		return "SELECT p.codigo, p.nombre, p.precio, SUM(v.unidades) AS total_unidades "
-				+ "FROM Productos  "
+				+ "FROM Productos p "
 				+ "JOIN Ventas v ON p.codigo = v.codProd "
 				+ "GROUP BY p.codigo, p.nombre, p.precio "
 				+ "ORDER BY total_unidades DESC "
