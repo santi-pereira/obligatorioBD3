@@ -64,7 +64,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 			msgError = "Error de acceso a los datos.";
 		}finally {
 			
-			if(existProd)
+			if(!existProd)
 			{
 				throw new exceptionNoExisteProducto("El producto " + codP + " no existe.");
 			}

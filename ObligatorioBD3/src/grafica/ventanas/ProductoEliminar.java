@@ -46,6 +46,7 @@ public class ProductoEliminar extends JInternalFrame {
 		super("Eliminar Producto", isIcon, isClosed, iconable, closable);
 		setBounds(100, 100, 385, 143);
 		getContentPane().setLayout(null);
+		 controlador = new ControladorProductoEliminar(this);
 		
 		JLabel lblNewLabel = new JLabel("Código producto:");
 		lblNewLabel.setBounds(21, 25, 91, 13);
