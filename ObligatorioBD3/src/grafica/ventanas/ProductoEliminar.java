@@ -3,10 +3,25 @@ package grafica.ventanas;
 import java.awt.EventQueue;
 
 import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import javax.swing.JTextField;
+
+import grafica.controladores.ControladorProductoEliminar;
+
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ProductoEliminar extends JInternalFrame {
 
 	private static final long serialVersionUID = 1L;
+	
+	ControladorProductoEliminar controlador;
+		
+	private JTextField textFieldCodigoProducto;
+
 
 	/**
 	 * Launch the application.
@@ -29,8 +44,61 @@ public class ProductoEliminar extends JInternalFrame {
 	 */
 	public ProductoEliminar(boolean isIcon,boolean isClosed,boolean iconable, boolean closable) {
 		super("Eliminar Producto", isIcon, isClosed, iconable, closable);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 385, 143);
+		getContentPane().setLayout(null);
+		 controlador = new ControladorProductoEliminar(this);
+		
+		JLabel lblNewLabel = new JLabel("Código producto:");
+		lblNewLabel.setBounds(21, 25, 91, 13);
+		getContentPane().add(lblNewLabel);
+		
+		textFieldCodigoProducto = new JTextField();
+		textFieldCodigoProducto.setBounds(122, 22, 157, 19);
+		getContentPane().add(textFieldCodigoProducto);
+		textFieldCodigoProducto.setColumns(10);
+		
+		JButton btnEliminar = new JButton("Eliminar");
+		btnEliminar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {eliminarProducto();}
+		});
+		btnEliminar.setBounds(194, 64, 85, 21);
+		getContentPane().add(btnEliminar);
+		
+		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		btnCancelar.setBounds(99, 64, 85, 21);
+		getContentPane().add(btnCancelar);
 
 	}
-
+	
+	public void eliminarProducto()
+	{
+		
+		if(!textFieldCodigoProducto.getText().isEmpty())
+		{
+			String cod = textFieldCodigoProducto.getText();
+			
+		
+				if(controlador.EliminarProducto(cod))
+				{
+					JOptionPane.showMessageDialog(this, "Se borró el producto de forma exitosa");
+				}
+			
+			}else
+			{
+				mostrarError("Se tiene que indicar el código del producto.");
+			}
+		
+		
+	}
+	
+	public void mostrarError(String mensaje)
+	{
+		JOptionPane.showMessageDialog(this, "Error al borrar el producto: \n" + mensaje);
+	}
+	
 }

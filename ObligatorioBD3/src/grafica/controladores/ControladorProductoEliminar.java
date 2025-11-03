@@ -4,20 +4,20 @@ import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
-import grafica.ventanas.ProductoMasVendido;
+import grafica.ventanas.ProductoEliminar;
 import logica.excepciones.excepcionErrorPersistencia;
 import logica.excepciones.exceptionNoExisteProducto;
-import logica.valueObjects.VOProdVentas;
 
-public class ControladorProductoMasVendido extends ConexionRMI{
-	private ProductoMasVendido ventana;
+public class ControladorProductoEliminar extends ConexionRMI {
+
+	private ProductoEliminar ventana;
 
 	private boolean conectado;
 
-	public ControladorProductoMasVendido(ProductoMasVendido v) {
+	public ControladorProductoEliminar(ProductoEliminar v) {
 
 		super();
-		ventana = v;
+			ventana = v;
 		try {
 			conectado = Conectar();
 		} catch (MalformedURLException e) {
@@ -31,26 +31,31 @@ public class ControladorProductoMasVendido extends ConexionRMI{
 		}
 
 	}
-
-	public VOProdVentas obtenerProductos() {
-		VOProdVentas producto = null;
-
+	
+	public boolean EliminarProducto(String codigo)
+	{
+		
+		boolean resp = false;
+		
 		if (conectado) {
 			try {
-				producto = super.iFac.productoMasUnidadesVendidas();
+                super.iFac.bajaProducto(codigo);
+                resp = true;				
+				
+			} catch (RuntimeException e) {
+				ventana.mostrarError("Error Runtime, fallo algo del sistema.");
 			} catch (RemoteException e) {
-				ventana.mostrarError("Error con la conexion a la los datos.");
+				ventana.mostrarError("Problemas de conexion al servidor"); 
 			} catch (excepcionErrorPersistencia e) {
-				ventana.mostrarError("Error con el acceso a los datos.");
+				ventana.mostrarError("Existe un problema con el acceso a los datos");
 			} catch (exceptionNoExisteProducto e) {
-				ventana.mostrarError("No hay productos registrados en el sistema.");
+				ventana.mostrarError("No existe el producto con este codigo");
+				e.printStackTrace();
 			}
-		} else {
-			ventana.mostrarError("Error con la conexion a los datos.");
+
 		}
-
-		return producto;
-
+		
+		return resp;
 	}
-
+	
 }
