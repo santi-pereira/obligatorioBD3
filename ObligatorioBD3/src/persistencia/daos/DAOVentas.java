@@ -11,9 +11,10 @@ import logica.Venta;
 import logica.excepciones.excepcionErrorPersistencia;
 import logica.valueObjects.VOVentaTotal;
 import persistencia.consultas.Consultas;
+import poolConexiones.Conexion;
 import poolConexiones.IConexion;
 
-public class DAOVentas {
+public class DAOVentas implements IDAOVentas {
 
 	private Consultas consultas;
 	private String codProd;
@@ -23,11 +24,12 @@ public class DAOVentas {
 		this.consultas = new Consultas();
 		this.codProd = codProd;
 	}
-	
+
+	@Override
 	public void insback(Venta venta, IConexion iConexion) throws excepcionErrorPersistencia {
 		PreparedStatement pStmt = null;
 		try {
-			Connection connection = iConexion.getConnection();
+			Connection connection = ((Conexion)iConexion).getConnection();
 			pStmt = connection.prepareStatement(this.consultas.insertarVenta());
 			pStmt.setInt(1, venta.getNumero());
 			pStmt.setString(2, this.codProd);
@@ -45,13 +47,14 @@ public class DAOVentas {
 				}
 		}
 	}
-	
+
+	@Override
 	public int largo(IConexion iConexion) throws excepcionErrorPersistencia {
 		int largo = 0;
 		PreparedStatement pStmt = null;
 		ResultSet resultSet = null;
 		try {
-			Connection connection = iConexion.getConnection();
+			Connection connection = ((Conexion)iConexion).getConnection();
 			pStmt = connection.prepareStatement(this.consultas.cantidadVentasByCodigoProducto());
 		    pStmt.setString(1, this.codProd);
 		    resultSet = pStmt.executeQuery();
@@ -77,13 +80,14 @@ public class DAOVentas {
 
 		return largo;
 	}
-	
+
+	@Override
 	public Venta Kesimo(int numVenta, IConexion iConexion) throws excepcionErrorPersistencia {
 		Venta venta = null;
 		PreparedStatement pStmt = null;
 		ResultSet resultSet = null;
 		try {
-			Connection connection = iConexion.getConnection();
+			Connection connection = ((Conexion)iConexion).getConnection();
 			pStmt = connection.prepareStatement(this.consultas.obtenerDatosVenta());
 		    pStmt.setInt(1, numVenta);
 			resultSet = pStmt.executeQuery();
@@ -112,10 +116,11 @@ public class DAOVentas {
 		return venta;
 	}
 
+	@Override
 	public void borrarVenta(IConexion iConexion) throws excepcionErrorPersistencia {  
 		PreparedStatement prs = null;
 		try {
-			Connection connection = iConexion.getConnection();
+			Connection connection = ((Conexion)iConexion).getConnection();
 
 			String query = this.consultas.bajarVentasByCodigoProducto();
 			prs = connection.prepareStatement(query);
@@ -133,13 +138,14 @@ public class DAOVentas {
 				}
 		}
 	}
-	
+
+	@Override
 	public List<VOVentaTotal> listarVentas(IConexion iConexion) throws excepcionErrorPersistencia {
 		List<VOVentaTotal> list = new LinkedList<VOVentaTotal>();
 		PreparedStatement pStmt = null;
 		ResultSet resultSet = null;
 		try {
-			Connection connection = iConexion.getConnection();
+			Connection connection = ((Conexion)iConexion).getConnection();
 			pStmt = connection.prepareStatement(this.consultas.obtenerVentasByCodigoP());
 		    pStmt.setString(1, this.codProd);
 		    resultSet = pStmt.executeQuery();
@@ -170,13 +176,14 @@ public class DAOVentas {
 
 		 return list;
 	}
-	
+
+	@Override
 	public double totalRecaudado(IConexion iConexion) throws excepcionErrorPersistencia { // obtenerTotalRecaudadoVentas
 		double totalUnidadesVendidas = 0;
 		PreparedStatement pStmt = null;
 		ResultSet resultSet = null;
 		try {
-			Connection connection = iConexion.getConnection();
+			Connection connection = ((Conexion)iConexion).getConnection();
 			pStmt = connection.prepareStatement(this.consultas.obtenerTotalRecaudadoVentas());
 		    pStmt.setString(1, this.codProd);
 		    resultSet = pStmt.executeQuery();
