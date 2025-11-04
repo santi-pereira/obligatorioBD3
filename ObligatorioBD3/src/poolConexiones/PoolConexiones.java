@@ -66,7 +66,7 @@ public class PoolConexiones implements IPoolConexiones {
     @Override
     public synchronized void liberarConexion(IConexion con, boolean ok) throws excepcionErrorPersistencia {
         try {
-            Connection connection = con.getConnection();
+            Connection connection = ((Conexion)con).getConnection();
             if (ok) {
                 connection.commit();
             } else {

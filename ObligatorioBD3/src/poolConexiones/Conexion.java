@@ -9,7 +9,6 @@ public class Conexion implements IConexion {
         this.connection = con;
     }
 
-    @Override
 	public Connection getConnection() {
 		return this.connection;
 	}
