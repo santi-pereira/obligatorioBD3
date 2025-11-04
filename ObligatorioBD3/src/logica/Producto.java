@@ -5,6 +5,7 @@ import java.util.List;
 import logica.excepciones.excepcionErrorPersistencia;
 import logica.valueObjects.VOVentaTotal;
 import persistencia.daos.DAOVentas;
+import poolConexiones.IConexion;
 
 public class Producto {
 	private String codigo;
@@ -32,27 +33,27 @@ public class Producto {
 		return precio;
 	}
 	
-	public int cantidadVentas() throws excepcionErrorPersistencia {
-		return this.secuencia.largo();
+	public int cantidadVentas(IConexion iConexion) throws excepcionErrorPersistencia {
+		return this.secuencia.largo(iConexion);
 	}
     
-    public void agregarVenta(Venta venta) throws excepcionErrorPersistencia {
-    	this.secuencia.insback(venta);
+    public void agregarVenta(Venta venta, IConexion iConexion) throws excepcionErrorPersistencia {
+    	this.secuencia.insback(venta, iConexion);
     }
     
-    public Venta obtenerVenta(int numVenta) throws excepcionErrorPersistencia {
-    	return this.secuencia.Kesimo(numVenta);
+    public Venta obtenerVenta(int numVenta, IConexion iConexion) throws excepcionErrorPersistencia {
+    	return this.secuencia.Kesimo(numVenta, iConexion);
     }
     
-    public void borrarVentas() throws excepcionErrorPersistencia {
-    	this.secuencia.borrarVenta();
+    public void borrarVentas(IConexion iConexion) throws excepcionErrorPersistencia {
+    	this.secuencia.borrarVenta(iConexion);
     }
     
-    public List<VOVentaTotal> listarVentas() throws excepcionErrorPersistencia {
-    	return this.secuencia.listarVentas();
+    public List<VOVentaTotal> listarVentas(IConexion iConexion) throws excepcionErrorPersistencia {
+    	return this.secuencia.listarVentas(iConexion);
     }
     
-    public double totalRecaudado() throws excepcionErrorPersistencia {
-    	return this.secuencia.totalRecaudado() * this.precio;
+    public double totalRecaudado(IConexion iConexion) throws excepcionErrorPersistencia {
+    	return this.secuencia.totalRecaudado(iConexion) * this.precio;
     }
 }

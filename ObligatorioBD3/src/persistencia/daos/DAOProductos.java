@@ -12,8 +12,8 @@ import logica.Producto;
 import logica.excepciones.excepcionErrorPersistencia;
 import logica.valueObjects.VOProdVentas;
 import logica.valueObjects.VOProducto;
-import persistencia.AccesoBD;
 import persistencia.consultas.Consultas;
+import poolConexiones.IConexion;
 
 public class DAOProductos {
 	Consultas consultas;
@@ -22,41 +22,63 @@ public class DAOProductos {
 		consultas = new Consultas();
 	}
 
-	public boolean member(String codP) throws excepcionErrorPersistencia {
+	public boolean member(String codP, IConexion iConexion) throws excepcionErrorPersistencia {
 		boolean existe = false;
- 
-		try (Connection connection = AccesoBD.instanciarConexion();
-				PreparedStatement pStmt = connection.prepareStatement(consultas.obtenerProducto())) {
-			    pStmt.setString(1, codP);
-			    try (ResultSet resultSet = pStmt.executeQuery()) {
-			    	if (resultSet.next()) {
-						existe = true;
-					}
-			    } 
-			} catch (SQLException e) {
-				throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+		PreparedStatement pStmt = null;
+
+		try {
+			Connection connection = iConexion.getConnection();
+			pStmt = connection.prepareStatement(consultas.obtenerProducto()); 
+		    pStmt.setString(1, codP);
+		    ResultSet resultSet = pStmt.executeQuery();
+	    	if (resultSet.next()) {
+				existe = true;
 			}
+	    	resultSet.close();
+	    	pStmt.close();
+		} catch (SQLException e) {
+			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+		} finally {
+			if (pStmt != null)
+				try {
+					pStmt.close();
+				} catch (SQLException e) {
+					throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+				}
+		}
 		return existe;
 	}
 
-	public void insert(Producto producto) throws excepcionErrorPersistencia {
-		try (Connection connection = AccesoBD.instanciarConexion();
-			PreparedStatement pStmt = connection.prepareStatement(consultas.insertarProducto())) {
+	public void insert(Producto producto, IConexion iConexion) throws excepcionErrorPersistencia {
+		PreparedStatement pStmt = null;
+		try {
+			Connection connection = iConexion.getConnection();
+			pStmt = connection.prepareStatement(consultas.insertarProducto());
 			// (codigo, nombre, precio)
 		    pStmt.setString(1, producto.getCodigo());
 		    pStmt.setString(2, producto.getNombre());
 		    pStmt.setInt(3, producto.getPrecio());
 		    pStmt.executeUpdate();
+	    	pStmt.close();
 		} catch (SQLException e) {
 			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+		} finally {
+			if (pStmt != null)
+				try {
+					pStmt.close();
+				} catch (SQLException e) {
+					throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+				}
 		}
 	}
 
-	public Producto find(String codP) throws excepcionErrorPersistencia {
+	public Producto find(String codP, IConexion iConexion) throws excepcionErrorPersistencia {
 		Producto producto = null;
+		PreparedStatement pStmt = null;
 		 
-		try (Connection connection = AccesoBD.instanciarConexion();
-			PreparedStatement pStmt = connection.prepareStatement(consultas.obtenerProducto())) {
+		try {
+			Connection connection = iConexion.getConnection();
+			pStmt = connection.prepareStatement(consultas.obtenerProducto());
 			pStmt.setString(1, codP);
 		    try (ResultSet resultSet = pStmt.executeQuery()) {
 		    	if (resultSet.next()) {
@@ -65,20 +87,28 @@ public class DAOProductos {
 					int precio = resultSet.getInt("precio");
 					producto = new Producto(codigo, nombre, precio);
 				}
-		    } 
+		    }
+		    pStmt.close();
 		} catch (SQLException e) {
 			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+		} finally {
+			if (pStmt != null)
+				try {
+					pStmt.close();
+				} catch (SQLException e) {
+					throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+				}
 		}
 		return producto;
 	}
 
-	public void delete(String codP) throws excepcionErrorPersistencia {
-
+	public void delete(String codP, IConexion iConexion) throws excepcionErrorPersistencia {
+		PreparedStatement prs = null;
 		try {
-			Connection connection = AccesoBD.instanciarConexion();
+			Connection connection = iConexion.getConnection();
 			String query = consultas.bajaProducto();
 
-			PreparedStatement prs = connection.prepareStatement(query);
+			prs = connection.prepareStatement(query);
 
 			prs.setString(1, codP);
 			prs.executeUpdate();
@@ -87,14 +117,23 @@ public class DAOProductos {
 
 		} catch (SQLException e) {
 			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+		} finally {
+			if (prs != null)
+				try {
+					prs.close();
+				} catch (SQLException e) {
+					throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+				}
 		}
 
 	}
 
-	public boolean esVacio() throws excepcionErrorPersistencia {
+	public boolean esVacio(IConexion iConexion) throws excepcionErrorPersistencia {
+		Statement stmt = null;
 		boolean esVacio = true;
-		try (Connection connection = AccesoBD.instanciarConexion();
-			Statement stmt = connection.createStatement()) {
+		try {
+			Connection connection = iConexion.getConnection();
+			stmt = connection.createStatement();
 		    try (ResultSet resultSet = stmt.executeQuery(consultas.obtenerTotalProductos())) {
 		    	if (resultSet.next()) {
 		    		int total = resultSet.getInt("total");
@@ -105,22 +144,31 @@ public class DAOProductos {
 		    } 
 		} catch (SQLException e) {
 			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+		} finally {
+			if (stmt != null)
+				try {
+					stmt.close();
+				} catch (SQLException e) {
+					throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+				}
 		}
 		
 		return esVacio;
 	}
 
-	public List<VOProducto> listarProductos() throws excepcionErrorPersistencia {
+	public List<VOProducto> listarProductos(IConexion iConexion) throws excepcionErrorPersistencia {
 
 		List<VOProducto> resp = new ArrayList<VOProducto>();
+		PreparedStatement prs = null;
+		ResultSet rs = null;
 
 		try {
-			Connection connection = AccesoBD.instanciarConexion();
+			Connection connection = iConexion.getConnection();
 
 			String query = this.consultas.obtenerProductos();
-			PreparedStatement prs = connection.prepareStatement(query);
+			prs = connection.prepareStatement(query);
 
-			ResultSet rs = prs.executeQuery();
+			rs = prs.executeQuery();
 
 			while (rs.next()) { 
 
@@ -134,26 +182,54 @@ public class DAOProductos {
 			prs.close();
 		} catch (SQLException e) {
 			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+		} finally {
+			if (prs != null)
+				try {
+					prs.close();
+				} catch (SQLException e) {
+					throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+				}
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+				}
 		}
 
 		return resp;
 	}
 
-	public VOProdVentas productoMasVendido() throws excepcionErrorPersistencia {
+	public VOProdVentas productoMasVendido(IConexion iConexion) throws excepcionErrorPersistencia {
 		VOProdVentas voProdVentas = null;
-		try (Connection connection = AccesoBD.instanciarConexion();
-			Statement stmt = connection.createStatement()) {
-		    try (ResultSet resultSet = stmt.executeQuery(consultas.obtenerProductoMasUnidadesVendidas())) {
-		    	if (resultSet.next()) { // String codigo, String nombre, int precio, int unidadesVendidas
-		    		String codigo = resultSet.getString("codigo");
-		    		String nombre = resultSet.getString("nombre");
-		    		int precio = resultSet.getInt("precio");
-		    		int unidadesVendidas = resultSet.getInt("total_unidades");
-		    		voProdVentas = new VOProdVentas(codigo, nombre, precio, unidadesVendidas);
-				}
-		    } 
+		Statement stmt = null;
+		ResultSet resultSet = null;
+		try {
+			Connection connection = iConexion.getConnection();
+			stmt = connection.createStatement();
+			resultSet = stmt.executeQuery(consultas.obtenerProductoMasUnidadesVendidas());
+			if (resultSet.next()) { // String codigo, String nombre, int precio, int unidadesVendidas
+	    		String codigo = resultSet.getString("codigo");
+	    		String nombre = resultSet.getString("nombre");
+	    		int precio = resultSet.getInt("precio");
+	    		int unidadesVendidas = resultSet.getInt("total_unidades");
+	    		voProdVentas = new VOProdVentas(codigo, nombre, precio, unidadesVendidas);
+			}
 		} catch (SQLException e) {
 			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+		} finally {
+			if (stmt != null)
+				try {
+					stmt.close();
+				} catch (SQLException e) {
+					throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+				}
+			if (resultSet != null)
+				try {
+					resultSet.close();
+				} catch (SQLException e) {
+					throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+				}
 		}
 
 		return voProdVentas;
