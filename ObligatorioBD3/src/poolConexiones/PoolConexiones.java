@@ -37,39 +37,47 @@ public class PoolConexiones implements IPoolConexiones {
 		}
     }
 
-	@Override
-	public IConexion obtenerConexion(boolean modifica) throws excepcionErrorPersistencia {
-		try {
-            while (tope == 0 && creadas == tamanio)
-                wait(); // esperamos hasta que haya una conexion disponible
+    @Override
+    public synchronized IConexion obtenerConexion(boolean modifica) throws excepcionErrorPersistencia {
+        try {
+            while (tope == 0 && creadas == tamanio) {
+                // esperamos hasta que haya una conexion disponible
+                wait();
+            }
+            Conexion conexion;
             if (tope > 0) {
-            	Conexion conexion = conexiones[--tope];
-                return conexion;
+                tope--;
+                conexion = conexiones[tope];
             } else {
                 Connection connection = DriverManager.getConnection(url, user, password);
                 connection.setTransactionIsolation(nivelTransaccionalidad);
                 connection.setAutoCommit(false);
-                Conexion conexion = new Conexion(connection);
+                conexion = new Conexion(connection);
                 creadas++;
-                return conexion;
             }
+            return conexion;
         } catch (Exception e) {
-            throw new excepcionErrorPersistencia("Ocurrio un error de persistencia ");
-        }
-	}
-
-	@Override
-	public void liberarConexion(IConexion con, boolean ok) throws excepcionErrorPersistencia {
-		try {
-            Connection connection = con.getConnection();
-            if (ok) 
-            	connection.commit(); 
-            else
-            	connection.rollback();
-            conexiones[tope++] = new Conexion(connection);
-            notify(); // despierta a los hilos que esten bloqueados esperando por una conexion disponible, si no hay ninguno esperando no hace nada
-        } catch (Exception e) {
+            // Add this line to see the real error in the server console!
+            e.printStackTrace(); 
             throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
-        }		
-	}
+        }
+    }
+
+    @Override
+    public synchronized void liberarConexion(IConexion con, boolean ok) throws excepcionErrorPersistencia {
+        try {
+            Connection connection = con.getConnection();
+            if (ok) {
+                connection.commit();
+            } else {
+                connection.rollback();
+            }
+            conexiones[tope] = (Conexion) con;
+            tope++;
+            notify(); // despierta a los hilos que esten bloqueados
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+        }
+    }
 }

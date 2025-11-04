@@ -49,7 +49,7 @@ public class Consultas {
 
 	public String obtenerVentasByCodigoP()
 	{
-		return "SELECT * FROM Ventas WHERE codProd = ? ORDER BY codigo";	
+		return "SELECT * FROM Ventas WHERE codProd = ? ORDER BY codProd";	
 	}
 	
 	public String obtenerTotalRecaudadoVentas()

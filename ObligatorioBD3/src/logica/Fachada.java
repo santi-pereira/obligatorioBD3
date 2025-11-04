@@ -201,6 +201,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 			list = producto.listarVentas(iConexion);
 			ipool.liberarConexion(iConexion, true);
 		} catch (Exception e) {
+			e.printStackTrace(); 
 			if (iConexion != null)
 				ipool.liberarConexion(iConexion, false);
 			throw new excepcionErrorPersistencia("Error con la persistencia");

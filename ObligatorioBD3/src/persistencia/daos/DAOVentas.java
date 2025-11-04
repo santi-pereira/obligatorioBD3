@@ -151,6 +151,7 @@ public class DAOVentas {
 	    		list.add(new VOVentaTotal(unidades, cliente, numero, cod));
 			}
 		} catch (SQLException e) {
+			e.printStackTrace();
 			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
 		}  finally {
 			if (pStmt != null)
