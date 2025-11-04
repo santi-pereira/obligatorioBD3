@@ -13,21 +13,23 @@ import logica.excepciones.excepcionErrorPersistencia;
 import logica.valueObjects.VOProdVentas;
 import logica.valueObjects.VOProducto;
 import persistencia.consultas.Consultas;
+import poolConexiones.Conexion;
 import poolConexiones.IConexion;
 
-public class DAOProductos {
+public class DAOProductos implements IDAOProductos {
 	Consultas consultas;
 
 	public DAOProductos() {
 		consultas = new Consultas();
 	}
 
+	@Override
 	public boolean member(String codP, IConexion iConexion) throws excepcionErrorPersistencia {
 		boolean existe = false;
 		PreparedStatement pStmt = null;
 
 		try {
-			Connection connection = iConexion.getConnection();
+			Connection connection = ((Conexion)iConexion).getConnection();
 			pStmt = connection.prepareStatement(consultas.obtenerProducto()); 
 		    pStmt.setString(1, codP);
 		    ResultSet resultSet = pStmt.executeQuery();
@@ -49,10 +51,11 @@ public class DAOProductos {
 		return existe;
 	}
 
+	@Override
 	public void insert(Producto producto, IConexion iConexion) throws excepcionErrorPersistencia {
 		PreparedStatement pStmt = null;
 		try {
-			Connection connection = iConexion.getConnection();
+			Connection connection = ((Conexion)iConexion).getConnection();
 			pStmt = connection.prepareStatement(consultas.insertarProducto());
 			// (codigo, nombre, precio)
 		    pStmt.setString(1, producto.getCodigo());
@@ -72,12 +75,13 @@ public class DAOProductos {
 		}
 	}
 
+	@Override
 	public Producto find(String codP, IConexion iConexion) throws excepcionErrorPersistencia {
 		Producto producto = null;
 		PreparedStatement pStmt = null;
 		 
 		try {
-			Connection connection = iConexion.getConnection();
+			Connection connection = ((Conexion)iConexion).getConnection();
 			pStmt = connection.prepareStatement(consultas.obtenerProducto());
 			pStmt.setString(1, codP);
 		    try (ResultSet resultSet = pStmt.executeQuery()) {
@@ -102,10 +106,11 @@ public class DAOProductos {
 		return producto;
 	}
 
+	@Override
 	public void delete(String codP, IConexion iConexion) throws excepcionErrorPersistencia {
 		PreparedStatement prs = null;
 		try {
-			Connection connection = iConexion.getConnection();
+			Connection connection = ((Conexion)iConexion).getConnection();
 			String query = consultas.bajaProducto();
 
 			prs = connection.prepareStatement(query);
@@ -128,11 +133,12 @@ public class DAOProductos {
 
 	}
 
+	@Override
 	public boolean esVacio(IConexion iConexion) throws excepcionErrorPersistencia {
 		Statement stmt = null;
 		boolean esVacio = true;
 		try {
-			Connection connection = iConexion.getConnection();
+			Connection connection = ((Conexion)iConexion).getConnection();
 			stmt = connection.createStatement();
 		    try (ResultSet resultSet = stmt.executeQuery(consultas.obtenerTotalProductos())) {
 		    	if (resultSet.next()) {
@@ -156,6 +162,7 @@ public class DAOProductos {
 		return esVacio;
 	}
 
+	@Override
 	public List<VOProducto> listarProductos(IConexion iConexion) throws excepcionErrorPersistencia {
 
 		List<VOProducto> resp = new ArrayList<VOProducto>();
@@ -163,7 +170,7 @@ public class DAOProductos {
 		ResultSet rs = null;
 
 		try {
-			Connection connection = iConexion.getConnection();
+			Connection connection = ((Conexion)iConexion).getConnection();
 
 			String query = this.consultas.obtenerProductos();
 			prs = connection.prepareStatement(query);
@@ -200,12 +207,13 @@ public class DAOProductos {
 		return resp;
 	}
 
+	@Override
 	public VOProdVentas productoMasVendido(IConexion iConexion) throws excepcionErrorPersistencia {
 		VOProdVentas voProdVentas = null;
 		Statement stmt = null;
 		ResultSet resultSet = null;
 		try {
-			Connection connection = iConexion.getConnection();
+			Connection connection = ((Conexion)iConexion).getConnection();
 			stmt = connection.createStatement();
 			resultSet = stmt.executeQuery(consultas.obtenerProductoMasUnidadesVendidas());
 			if (resultSet.next()) { // String codigo, String nombre, int precio, int unidadesVendidas

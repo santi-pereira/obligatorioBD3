@@ -35,7 +35,8 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 	private boolean existeProducto(String codP, IConexion iConexion) throws RemoteException, excepcionErrorPersistencia {
 		return daoProducto.member(codP, iConexion);
 	}
- 
+
+	@Override
 	public void altaProducto(VOProducto VoP) throws RemoteException, exceptionExisteCodigoProducto, excepcionErrorPersistencia {
 		IConexion iConexion = null;
 		boolean altaProdOK = false;
@@ -56,6 +57,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 		}
 	}
 
+	@Override
 	public void bajaProducto(String codP) throws RemoteException, exceptionNoExisteProducto, excepcionErrorPersistencia {
 		IConexion iConexion = null;
 		boolean existProd = false; 
@@ -65,9 +67,9 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 		try {
 			iConexion = ipool.obtenerConexion(true);
 			existProd = this.existeProducto(codP, iConexion);
-			Producto producto = this.daoProducto.find(codP, iConexion);
 
 			if(existProd) {
+				Producto producto = this.daoProducto.find(codP, iConexion);
 				producto.borrarVentas(iConexion);
 				this.daoProducto.delete(codP, iConexion);
 			}
@@ -100,6 +102,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 	 * venta el número siguiente al de la última venta registrada hasta el momento
 	 * para ese producto (si es la primera, tendrá el número 1).
 	 */
+	@Override
 	public void registroVenta(String codP, VOVenta voV) throws RemoteException, exceptionNoExisteProducto, excepcionErrorPersistencia {
 		IConexion iConexion = null;
 		try {
@@ -129,6 +132,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 	 * número).
 	 * 
 	 * */
+	@Override
 	public VOVenta datosVenta(String codP, int numV) throws RemoteException, exceptionNoExisteVenta, excepcionErrorPersistencia, exceptionNoExisteProducto
 	{
 		IConexion iConexion = null;
@@ -163,6 +167,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 	 * 
 	 */
 
+	@Override
 	public List<VOProducto> listadoProductos() throws RemoteException, excepcionErrorPersistencia {
 		IConexion iConexion = null;
 		List<VOProducto> resp = null;
@@ -188,6 +193,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 		return resp;
 	}
 
+	@Override
 	public List<VOVentaTotal> listadoVentas(String codProd) throws RemoteException, excepcionErrorPersistencia, exceptionNoExisteProducto {
 		IConexion iConexion = null;
 		Producto producto = null;
@@ -210,6 +216,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 		return list;
 	}
 
+	@Override
 	public VOProdVentas productoMasUnidadesVendidas() throws RemoteException, excepcionErrorPersistencia, exceptionNoExisteProducto {
 		IConexion iConexion = null;
 		VOProdVentas voProdVentas = null;
@@ -229,7 +236,8 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 
 		return voProdVentas;
 	}
-	
+
+	@Override
 	public double totalRecaudadoPorVentas(String codProd) throws RemoteException, exceptionNoExisteProducto, excepcionErrorPersistencia {
 		IConexion iConexion = null;
 		double totalRecaudado = 0;
