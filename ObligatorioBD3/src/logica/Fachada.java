@@ -42,8 +42,10 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 		boolean altaProdOK = false;
 		try {
 			iConexion = ipool.obtenerConexion(true);
-			if (this.existeProducto(VoP.getCodigo(), iConexion))
-				throw new exceptionExisteCodigoProducto("Ya existe un producto con el codigo indicado.");
+			if (this.existeProducto(VoP.getCodigo(), iConexion)) {
+				ipool.liberarConexion(iConexion, altaProdOK);
+				throw new exceptionExisteCodigoProducto("Ya existe un producto con el codigo indicado.");				
+			}
 
 			Producto producto = new Producto(VoP.getCodigo(), VoP.getNombre(), VoP.getPrecio());
 			this.daoProducto.insert(producto, iConexion);
@@ -140,14 +142,16 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 		try {
 			iConexion = ipool.obtenerConexion(true);
 			if (!this.existeProducto(codP, iConexion)) {
-				ipool.liberarConexion(iConexion, false);
+				if (iConexion != null)
+					ipool.liberarConexion(iConexion, false);
 				throw new exceptionNoExisteProducto("No existe el producto con el codigo indicado.");
 			}
 
 			Producto producto = this.daoProducto.find(codP, iConexion);
 			Venta venta = producto.obtenerVenta(numV, iConexion);
 			if (venta == null) {
-				ipool.liberarConexion(iConexion, false);
+				if (iConexion != null)
+					ipool.liberarConexion(iConexion, false);
 				throw new exceptionNoExisteVenta("No existe una venta con el codigo y numero indicado");
 			}
 			ipool.liberarConexion(iConexion, true);
@@ -201,6 +205,8 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 		try {
 			iConexion = ipool.obtenerConexion(true);
 			if (!this.existeProducto(codProd, iConexion)) {
+				if (iConexion != null)
+					ipool.liberarConexion(iConexion, false);
 				throw new exceptionNoExisteProducto("No existe el producto con el codigo indicado.");
 			}
 			producto = this.daoProducto.find(codProd, iConexion);
@@ -224,6 +230,8 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 			iConexion = ipool.obtenerConexion(true);
 			boolean esVacio = this.daoProducto.esVacio(iConexion);
 			if (esVacio) {
+				if (iConexion != null)
+					ipool.liberarConexion(iConexion, false);
 				throw new exceptionNoExisteProducto("No existe ningun producto registrado en el sistema.");
 			}
 			voProdVentas = this.daoProducto.productoMasVendido(iConexion);
@@ -244,7 +252,8 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 		try {
 			iConexion = ipool.obtenerConexion(true);
 			if (!this.existeProducto(codProd, iConexion)) {
-				ipool.liberarConexion(iConexion, false);
+				if (iConexion != null)
+					ipool.liberarConexion(iConexion, false);
 				throw new exceptionNoExisteProducto("No existe el producto con el codigo indicado.");
 			}
 			Producto producto = this.daoProducto.find(codProd, iConexion);

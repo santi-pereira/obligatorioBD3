@@ -5,13 +5,14 @@ import java.util.List;
 import logica.excepciones.excepcionErrorPersistencia;
 import logica.valueObjects.VOVentaTotal;
 import persistencia.daos.DAOVentas;
+import persistencia.daos.IDAOVentas;
 import poolConexiones.IConexion;
 
 public class Producto {
 	private String codigo;
     private String nombre;
     private int precio;
-    private DAOVentas secuencia;   // relación 1 a 1 con el DAO
+    private IDAOVentas secuencia;   // relación 1 a 1 con el DAO
 
 	public Producto(String codigo, String nombre, int precio) {
 		super();
