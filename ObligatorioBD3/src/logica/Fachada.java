@@ -12,10 +12,11 @@ import logica.valueObjects.VOProdVentas;
 import logica.valueObjects.VOProducto;
 import logica.valueObjects.VOVenta;
 import logica.valueObjects.VOVentaTotal;
-import persistencia.daos.DAOProductos;
+import persistencia.daos.IDAOProductos;
+import persistencia.fabricas.FabricaAbstracta;
+import persistencia.fabricas.FabricaManager;
 import poolConexiones.IConexion;
 import poolConexiones.IPoolConexiones;
-import poolConexiones.PoolConexiones;
 
 public class Fachada extends UnicastRemoteObject implements IFachada {
 
@@ -24,16 +25,17 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 	 */
 	private static final long serialVersionUID = 1L;
 	private IPoolConexiones ipool;
-	
-	DAOProductos daoProducto;
+	private FabricaAbstracta fabricaAbstracta;
+    private IDAOProductos daoProducto;
 
 	public Fachada() throws RemoteException, excepcionErrorPersistencia {
-		ipool = new PoolConexiones();
-		daoProducto = new DAOProductos();
+		this.fabricaAbstracta = FabricaManager.getFabrica();
+		this.ipool = fabricaAbstracta.crearPoolConexiones();
+        this.daoProducto = fabricaAbstracta.crearDAOProductos();
 	}
 
 	private boolean existeProducto(String codP, IConexion iConexion) throws RemoteException, excepcionErrorPersistencia {
-		return daoProducto.member(codP, iConexion);
+		return this.daoProducto.member(codP, iConexion);
 	}
 
 	@Override

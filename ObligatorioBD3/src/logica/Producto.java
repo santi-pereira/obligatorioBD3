@@ -4,8 +4,8 @@ import java.util.List;
 
 import logica.excepciones.excepcionErrorPersistencia;
 import logica.valueObjects.VOVentaTotal;
-import persistencia.daos.DAOVentas;
 import persistencia.daos.IDAOVentas;
+import persistencia.fabricas.FabricaManager;
 import poolConexiones.IConexion;
 
 public class Producto {
@@ -14,12 +14,12 @@ public class Producto {
     private int precio;
     private IDAOVentas secuencia;   // relación 1 a 1 con el DAO
 
-	public Producto(String codigo, String nombre, int precio) {
+	public Producto(String codigo, String nombre, int precio) throws excepcionErrorPersistencia {
 		super();
 		this.codigo = codigo;
 		this.nombre = nombre;
 		this.precio = precio;
-	    this.secuencia = new DAOVentas(codigo);
+		this.secuencia = FabricaManager.getFabrica().crearDAOVentas(this.codigo);
 	}
 
 	public String getCodigo() {
