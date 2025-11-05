@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 
 import logica.Producto;
@@ -119,13 +121,49 @@ public class DAOProductosArchivo implements IDAOProductos {
 
 	@Override
 	public boolean esVacio(IConexion iConexion) throws excepcionErrorPersistencia {
-		return false;
+		boolean vacio = true;
+		
+		File carpeta = new File(getRuta());
+
+        if (carpeta.exists() && carpeta.isDirectory()) {
+            
+            FilenameFilter filtro = (dir, nombre) -> nombre.toLowerCase().startsWith("PROD-");
+
+            File[] archivos = carpeta.listFiles(filtro);
+
+            if (archivos != null && archivos.length > 0) {
+                vacio = false;
+            }
+        } else {
+            throw new excepcionErrorPersistencia("Error en persistencia.");
+        }
+        
+        return vacio;
 	}
 
 	@Override
 	public List<VOProducto> listarProductos(IConexion iConexion) throws excepcionErrorPersistencia {
-		// TODO Auto-generated method stub
-		return null;
+		List<VOProducto> resp = new ArrayList<VOProducto>();
+		
+		File carpeta = new File(getRuta());
+		
+		if (carpeta.exists() && carpeta.isDirectory()) {
+            FilenameFilter filtro = (dir, nombre) -> nombre.toLowerCase().startsWith("PROD-");
+
+            File[] archivos = carpeta.listFiles(filtro);
+
+            if (archivos != null && archivos.length > 0) {
+                
+                for (File archivo : archivos) {
+                	Producto p = find(archivo.getName().replace("PROD-", "").replace(".txt", ""), iConexion);
+                	resp.add(new VOProducto(p.getCodigo(), p.getNombre(), p.getPrecio()));
+                }
+            } 
+        } else {
+            throw new excepcionErrorPersistencia("Error de persistencia.");
+        }
+		
+		return resp;
 	}
 
 	@Override
