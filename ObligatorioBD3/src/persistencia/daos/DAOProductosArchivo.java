@@ -55,9 +55,9 @@ public class DAOProductosArchivo implements IDAOProductos {
 		// ConexionAArchivo connection = ((ConexionAArchivo)iConexion).getConnection();
 
 		try (FileWriter writer = new FileWriter(getRuta() + "PROD-" + producto.getCodigo() + ".txt")) {
-			writer.write(producto.getCodigo());
-			writer.write(producto.getNombre());
-			writer.write(producto.getPrecio());
+			writer.write(producto.getCodigo()+ System.lineSeparator());
+			writer.write(producto.getNombre()+ System.lineSeparator());
+			writer.write(String.valueOf(producto.getPrecio()));
 		} catch (IOException e) {
 			throw new excepcionErrorPersistencia("Error en la persistencia.");
 		}
