@@ -57,8 +57,6 @@ public class PoolConexiones implements IPoolConexiones {
             }
             return conexion;
         } catch (Exception e) {
-            // Add this line to see the real error in the server console!
-            e.printStackTrace(); 
             throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
         }
     }
