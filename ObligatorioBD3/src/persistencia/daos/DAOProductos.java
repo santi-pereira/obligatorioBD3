@@ -94,7 +94,7 @@ public class DAOProductos implements IDAOProductos {
 		    }
 		    pStmt.close();
 		} catch (SQLException e) {
-			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia al buscar el producto.");
 		} finally {
 			if (pStmt != null)
 				try {

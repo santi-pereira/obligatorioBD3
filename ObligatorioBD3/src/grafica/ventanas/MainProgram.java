@@ -101,9 +101,13 @@ public class MainProgram {
 	private void abrirVentanaInterna(JInternalFrame frame) {
 		
 		
-        frame.setSize(300, 200);
+        //frame.setSize(300, 200);
         frame.setVisible(true);
+        
         desktopPane.add(frame);
+        
+        //frame.pack();
+        
         try {
             frame.setSelected(true);
         } catch (java.beans.PropertyVetoException e) {

@@ -47,30 +47,30 @@ public class VentaRegistrar extends JInternalFrame {
 		controlador = new ControladorVentaRegistrar(this);
 		
 		JLabel labelCodigo = new JLabel("Codigo Producto:");
-		labelCodigo.setBounds(10, 38, 103, 14);
+		labelCodigo.setBounds(10, 38, 117, 14);
 		getContentPane().add(labelCodigo);
 		
 		JLabel labelUnidades = new JLabel("Unidades:");
-		labelUnidades.setBounds(10, 79, 77, 16);
+		labelUnidades.setBounds(10, 64, 77, 16);
 		getContentPane().add(labelUnidades);
 		
 		JLabel labelCliente = new JLabel("Cliente:");
-		labelCliente.setBounds(22, 121, 65, 16);
+		labelCliente.setBounds(10, 92, 65, 16);
 		getContentPane().add(labelCliente);
 		
 		textField_codigo = new JTextField();
 		textField_codigo.setColumns(10);
-		textField_codigo.setBounds(104, 32, 287, 26);
+		textField_codigo.setBounds(146, 32, 287, 26);
 		getContentPane().add(textField_codigo);
 		
 		textField_unidades = new JTextField();
 		textField_unidades.setColumns(10);
-		textField_unidades.setBounds(97, 74, 294, 26);
+		textField_unidades.setBounds(146, 59, 287, 26);
 		getContentPane().add(textField_unidades);
 		
 		textField_cliente = new JTextField();
 		textField_cliente.setColumns(10);
-		textField_cliente.setBounds(104, 116, 287, 26);
+		textField_cliente.setBounds(146, 87, 287, 26);
 		getContentPane().add(textField_cliente);
 		
 		JButton btnCancelar = new JButton("Cancelar");
@@ -79,14 +79,14 @@ public class VentaRegistrar extends JInternalFrame {
 				dispose();
 			}
 		});
-		btnCancelar.setBounds(132, 170, 117, 29);
+		btnCancelar.setBounds(187, 170, 117, 29);
 		getContentPane().add(btnCancelar);
 		
 		JButton btnRegistrar = new JButton("Registrar");
 		btnRegistrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {registrarVenta();}
 		});
-		btnRegistrar.setBounds(259, 170, 117, 29);
+		btnRegistrar.setBounds(316, 170, 117, 29);
 		getContentPane().add(btnRegistrar);
 
 	}
