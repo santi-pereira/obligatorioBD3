@@ -1,14 +1,7 @@
 package poolConexiones;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.util.Properties;
 
-import logica.excepciones.excepcionErrorPersistencia;
-
-public class PoolConexionesArchivo implements IPoolConexiones {
+public class PoolConexionesArchivo implements IPoolConexionesArchivo {
 
 	private int cantLectores;
     private boolean escribiendo;
@@ -20,11 +13,11 @@ public class PoolConexionesArchivo implements IPoolConexiones {
 		this.escribiendo = false;
 		
     }
-
+	@Override
     public synchronized IConexion obtenerConexion(boolean modifica) {
     		 
     	IConexion conexion = new ConexionArchivo(modifica);
-    	if ((ConexionArchivo)(conexion).getConnection()) {
+    	if (!modifica) {
             while (this.escribiendo || this.cantLectores >= PoolConexionesArchivo.maxLect) {
     			try {
     				wait();
@@ -32,27 +25,30 @@ public class PoolConexionesArchivo implements IPoolConexiones {
     				Thread.currentThread().interrupt();
     		}
     		this.cantLectores++;   
-            }
-            return conexion;
-  
+            }            
+    	}
+    	else {
+    		while(this.escribiendo || this.cantLectores > 0) {
+    			try {
+    				wait();
+    			} catch(InterruptedException e) {
+    				Thread.currentThread().interrupt();
+   					
+    			} 
+    			
+    		}
+    		this.escribiendo = true;
+    	}
+    	return conexion;
+    }
+	@Override
+    public synchronized void liberarConexion(IConexion con) {
+    	
+    	this.cantLectores--;
+		if (cantLectores == 0) {
+			notify();
+		}
     }
 
-    @Override
-    public synchronized void liberarConexion(IConexion con, boolean ok) throws excepcionErrorPersistencia {
-        try {
-            Connection connection = ((Conexion)con).getConnection();
-            if (ok) {
-                connection.commit();
-            } else {
-                connection.rollback();
-            }
-            conexiones[tope] = (Conexion) con;
-            tope++;
-            notify(); // despierta a los hilos que esten bloqueados
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
-        }
-    }
 	
 }

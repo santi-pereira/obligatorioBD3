@@ -1,9 +1,7 @@
 package poolConexiones;
 
-import logica.excepciones.excepcionErrorPersistencia;
+public interface IPoolConexionesArchivo {
 
-public class IPoolConexionesArchivo {
-
-	public IConexion obtenerConexion(boolean modifica) throws excepcionErrorPersistencia;
-    public void liberarConexion(IConexion con, boolean ok) throws excepcionErrorPersistencia;
+	public IConexion obtenerConexion(boolean modifica);
+    public void liberarConexion(IConexion con);
 }
