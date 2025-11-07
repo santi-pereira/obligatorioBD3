@@ -89,7 +89,8 @@ public class DAOVentas implements IDAOVentas {
 		try {
 			Connection connection = ((Conexion)iConexion).getConnection();
 			pStmt = connection.prepareStatement(this.consultas.obtenerDatosVenta());
-		    pStmt.setInt(1, numVenta);
+			pStmt.setString(1, codProd);
+		    pStmt.setInt(2, numVenta);
 			resultSet = pStmt.executeQuery();
 	    	if (resultSet.next()) {
 	    		int cantidad = resultSet.getInt("unidades"); 
@@ -97,13 +98,13 @@ public class DAOVentas implements IDAOVentas {
 	    		venta = new Venta(numVenta, cantidad, cliente);
 			}
 		} catch (SQLException e) {
-			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+			throw new excepcionErrorPersistencia("Ocurrio un error de persistencia al buscar la venta.");
 		}  finally {
 			if (pStmt != null)
 				try {
 					pStmt.close();
 				} catch (SQLException e) {
-					throw new excepcionErrorPersistencia("Ocurrio un error de persistencia.");
+					throw new excepcionErrorPersistencia("Ocurrio un error de persistencia al buscar la venta.");
 				}
 			if (resultSet != null)
 				try {

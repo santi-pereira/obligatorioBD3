@@ -141,6 +141,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 		VOVenta resp = null;
 		try {
 			iConexion = ipool.obtenerConexion(true);
+			
 			if (!this.existeProducto(codP, iConexion)) {
 				if (iConexion != null)
 					ipool.liberarConexion(iConexion, false);

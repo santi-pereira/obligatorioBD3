@@ -20,6 +20,7 @@ public class Producto {
 		this.nombre = nombre;
 		this.precio = precio;
 	    this.secuencia = new DAOVentas(codigo);
+	    
 	}
 
 	public String getCodigo() {

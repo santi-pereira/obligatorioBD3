@@ -1,5 +1,7 @@
 package grafica.ventanas;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JInternalFrame;
@@ -52,20 +54,20 @@ public class VentasListado extends JInternalFrame {
 		controlador = new ControladorVentasListado(this);
 		
 		JLabel lblCodProd = new JLabel("Código de producto:");
-		lblCodProd.setBounds(54, 32, 110, 13);
+		lblCodProd.setBounds(6, 33, 140, 13);
 		getContentPane().add(lblCodProd);
 		
 		textCodProd = new JTextField();
-		textCodProd.setBounds(191, 29, 198, 19);
+		textCodProd.setBounds(143, 29, 164, 19);
 		getContentPane().add(textCodProd);
 		textCodProd.setColumns(10);
 		
-		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(191, 80, 85, 21);
+		JButton btnCancelar = new JButton("Cerrar");
+		btnCancelar.setBounds(335, 227, 85, 21);
 		getContentPane().add(btnCancelar);
 		
 		JButton btnListarVentas = new JButton("Listar Ventas");
-		btnListarVentas.setBounds(293, 80, 96, 21);
+		btnListarVentas.setBounds(324, 30, 96, 21);
 		btnListarVentas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				 DefaultTableModel model = (DefaultTableModel) table.getModel();
@@ -77,7 +79,7 @@ public class VentasListado extends JInternalFrame {
 
 			        if (lista != null) {
 			            for (VOVentaTotal voVenta : lista) {
-			                Object[] rowData = { voVenta.getUnidades(), voVenta.getCliente() };
+			                Object[] rowData = { String.valueOf(voVenta.getNumero()), voVenta.getUnidades(), voVenta.getCliente() };
 			                model.addRow(rowData);
 			            }
 			        }
@@ -85,33 +87,31 @@ public class VentasListado extends JInternalFrame {
 		
 		getContentPane().add(btnListarVentas);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 126, 414, 134);
-		getContentPane().add(scrollPane);
-		
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
-				"Unidades", "Cliente"
+				"Numero","Unidades", "Cliente"
 			}
-		) {
-			Class[] columnTypes = new Class[] {
-				Integer.class, String.class
-			};
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-		});
+		));
+		
 		table.getColumnModel().getColumn(1).setResizable(false);
-		scrollPane.setColumnHeaderView(table);
+		table.setShowGrid(true); 
+		table.setGridColor(Color.GRAY); 
+		table.getTableHeader().setReorderingAllowed(true);
+		
+		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.setBounds(6, 56, 414, 159);
+		getContentPane().add(scrollPane, BorderLayout.CENTER);
+		
+		//scrollPane.setColumnHeaderView(table);
 
 	
 	}
 
 	public void mostrarError(String mensaje)
 	{
-		JOptionPane.showMessageDialog(this, "Error al registrar el producto: \n" + mensaje);
+		JOptionPane.showMessageDialog(this, "Error al listar ventas: \n" + mensaje);
 	}
 }
