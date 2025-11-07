@@ -11,7 +11,7 @@ public class pruebaDAOProductoArchivo {
 		DAOProductosArchivo dao = new DAOProductosArchivo();
 		
 		try {
-			//dao.insert(new Producto("cod111", "Pulgas", 0), null);
+//			dao.insert(new Producto("cod111", "Pulgas", 0), null);
 			
 			System.out.println("Obtengo el producto: cod111");
 			

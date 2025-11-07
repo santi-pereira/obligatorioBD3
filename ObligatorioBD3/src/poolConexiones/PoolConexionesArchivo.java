@@ -6,7 +6,7 @@ public class PoolConexionesArchivo implements IPoolConexionesArchivo {
 	private int cantLectores;
     private boolean escribiendo;
     
-    private static final int maxLect = 10; // es agregado, para que no sea infinito el monitor
+    private static final int maxLect = 10;
 
     public PoolConexionesArchivo () {
 		this.cantLectores = 0;
