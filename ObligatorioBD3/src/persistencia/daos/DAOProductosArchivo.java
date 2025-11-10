@@ -81,7 +81,7 @@ public class DAOProductosArchivo implements IDAOProductos {
 			throw new excepcionErrorPersistencia ("Error en persistencia");
 		} finally {
 			if (conexion != null) {
-				pool.liberarConexion(conexion);
+				pool.liberarConexion(conexion, false);
 			}
 		}
 
@@ -103,7 +103,7 @@ public class DAOProductosArchivo implements IDAOProductos {
             throw new excepcionErrorPersistencia("Error en la persistencia.");
         } finally {
             if (conexion != null) {
-                pool.liberarConexion(conexion);
+                pool.liberarConexion(conexion, false);
             }
         }
     }
@@ -125,7 +125,7 @@ public class DAOProductosArchivo implements IDAOProductos {
 	            throw new excepcionErrorPersistencia("Error en la persistencia.");
 	        } finally {
 	            if (conexion != null) {
-	                pool.liberarConexion(conexion);
+	                pool.liberarConexion(conexion, false);
 	            }
 	        }
 	        return prod;
@@ -146,7 +146,7 @@ public class DAOProductosArchivo implements IDAOProductos {
             throw new excepcionErrorPersistencia("Error en persistencia.");
         } finally {
             if (conexion != null) {
-                pool.liberarConexion(conexion);
+                pool.liberarConexion(conexion, false);
             }
         }
     }
@@ -165,7 +165,7 @@ public class DAOProductosArchivo implements IDAOProductos {
             throw new excepcionErrorPersistencia("Error en persistencia.");
         } finally {
             if (conexion != null) {
-                pool.liberarConexion(conexion);
+                pool.liberarConexion(conexion, false);
             }
         }
         return vacio;
@@ -203,7 +203,7 @@ public class DAOProductosArchivo implements IDAOProductos {
 	        throw new excepcionErrorPersistencia("Error al listar productos.");
 	    } finally {
 	        if (conexion != null)
-	            pool.liberarConexion(conexion);
+	            pool.liberarConexion(conexion, false);
 	    }
 
 	    return resp;
@@ -258,7 +258,7 @@ public class DAOProductosArchivo implements IDAOProductos {
 	        throw new excepcionErrorPersistencia("Error calculando producto más vendido.");
 	    } finally {
 	        if (conexion != null) {
-	            pool.liberarConexion(conexion);
+	            pool.liberarConexion(conexion, false);
 	        }
 	    }
 

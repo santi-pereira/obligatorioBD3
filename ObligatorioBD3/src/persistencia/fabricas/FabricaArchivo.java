@@ -6,6 +6,7 @@ import persistencia.daos.DAOVentasArchivo;
 import persistencia.daos.IDAOProductos;
 import persistencia.daos.IDAOVentas;
 import poolConexiones.IPoolConexiones;
+import poolConexiones.PoolConexionesArchivo;
 
 public class FabricaArchivo implements FabricaAbstracta {
 
@@ -16,14 +17,12 @@ public class FabricaArchivo implements FabricaAbstracta {
 
 	@Override
 	public IDAOVentas crearDAOVentas(String codigo) {
-		// TODO Auto-generated method stub
 		return new DAOVentasArchivo(codigo);
 	}
 
 	@Override
 	public IPoolConexiones crearPoolConexiones() throws excepcionErrorPersistencia {
-		// TODO Auto-generated method stub
-		return null;
+		return new PoolConexionesArchivo();
 	}
 
 }
