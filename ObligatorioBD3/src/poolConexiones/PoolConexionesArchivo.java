@@ -44,7 +44,7 @@ public class PoolConexionesArchivo implements IPoolConexiones {
     }
 
 	@Override
-	public void liberarConexion(IConexion con, boolean ok) throws excepcionErrorPersistencia {
+	public synchronized void liberarConexion(IConexion con, boolean ok) throws excepcionErrorPersistencia {
     	
     	this.cantLectores--;
 		if (cantLectores == 0) {
