@@ -45,10 +45,18 @@ public class PoolConexionesArchivo implements IPoolConexiones {
 
 	@Override
 	public synchronized void liberarConexion(IConexion con, boolean ok) throws excepcionErrorPersistencia {
-    	
-    	this.cantLectores--;
-		if (cantLectores == 0) {
-			notify();
-		}
+		boolean eraEscritor = false;
+        if (con instanceof ConexionArchivo) {
+            eraEscritor = ((ConexionArchivo) con).getConnection();
+        }
+        if (eraEscritor) {
+            escribiendo = false;
+            notifyAll();
+        } else {
+            cantLectores--;
+            if (cantLectores == 0) {
+                notifyAll();
+            }
+        }
     }	
 }
