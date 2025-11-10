@@ -9,7 +9,6 @@ import logica.valueObjects.VOProducto;
 import poolConexiones.IConexion;
 
 public interface IDAOProductos {
-
 	public boolean member(String codP, IConexion iConexion) throws excepcionErrorPersistencia;
 	public void insert(Producto producto, IConexion iConexion) throws excepcionErrorPersistencia;
 	public Producto find(String codP, IConexion iConexion) throws excepcionErrorPersistencia;

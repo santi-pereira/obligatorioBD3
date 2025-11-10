@@ -100,20 +100,24 @@ public class DAOVentasArchivo implements IDAOVentas {
     
     // -------------------------------------
 
+    @Override
     public void insback(Venta venta, IConexion iConexion) throws excepcionErrorPersistencia {
         int nuevoNum = getNextNumeroVenta(); 
         venta.setNumero(nuevoNum);
         escribirVentaEnArchivo(venta);
     }
-    
+
+    @Override
     public int largo(IConexion iConexion) throws excepcionErrorPersistencia {
         return getNextNumeroVenta() - 1; 
     }
-    
+
+    @Override
     public Venta Kesimo(int numVenta, IConexion iConexion) throws excepcionErrorPersistencia {
         return leerVentaDesdeArchivo(numVenta);
     }
-    
+
+    @Override
     public void borrarVenta(IConexion iConexion) throws excepcionErrorPersistencia {  
         File currentDir = new File(".");
         File[] files = currentDir.listFiles((dir, name) -> 
@@ -128,7 +132,8 @@ public class DAOVentasArchivo implements IDAOVentas {
             }
         }
     }
-    
+
+    @Override
     public List<VOVentaTotal> listarVentas(IConexion iConexion) throws excepcionErrorPersistencia {
         List<VOVentaTotal> list = new LinkedList<>();
         int maxVenta = getNextNumeroVenta() - 1;
@@ -146,7 +151,8 @@ public class DAOVentasArchivo implements IDAOVentas {
         }
         return list;
     }
-    
+
+    @Override
     public double totalRecaudado(IConexion iConexion) throws excepcionErrorPersistencia { 
         double totalUnidadesVendidas = 0;
         int maxVenta = getNextNumeroVenta() - 1;
