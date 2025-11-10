@@ -47,32 +47,32 @@ public class VentasTotalRecaudado extends JInternalFrame {
 		controlador = new ControladorVentasTotalRecaudado(this);
 		
 		JLabel lblCodProducto = new JLabel("Código producto:");
-		lblCodProducto.setBounds(48, 40, 107, 13);
+		lblCodProducto.setBounds(6, 41, 123, 13);
 		getContentPane().add(lblCodProducto);
 		
 		textCodigoProducto = new JTextField();
-		textCodigoProducto.setBounds(180, 37, 180, 19);
+		textCodigoProducto.setBounds(134, 37, 180, 19);
 		getContentPane().add(textCodigoProducto);
 		textCodigoProducto.setColumns(10);
 		
 		JLabel lblTotalTexto = new JLabel("Total recaudado de ventas:");
-		lblTotalTexto.setBounds(48, 124, 144, 13);
+		lblTotalTexto.setBounds(6, 124, 180, 13);
 		getContentPane().add(lblTotalTexto);
 		
 		JLabel lblTotalVtasRecaudado = new JLabel("0");
-		lblTotalVtasRecaudado.setBounds(205, 124, 45, 13);
+		lblTotalVtasRecaudado.setBounds(181, 124, 133, 13);
 		getContentPane().add(lblTotalVtasRecaudado);
 		
-		JButton btnCancelar = new JButton("Cancelar");
+		JButton btnCancelar = new JButton("Cerrar");
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 			}
 		});
-		btnCancelar.setBounds(180, 83, 85, 21);
+		btnCancelar.setBounds(335, 181, 85, 21);
 		getContentPane().add(btnCancelar);
 		
-		JButton btnAplicar = new JButton("Aplicar");
+		JButton btnAplicar = new JButton("Buscar");
 		btnAplicar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String codP = textCodigoProducto.getText();
@@ -86,7 +86,7 @@ public class VentasTotalRecaudado extends JInternalFrame {
 					}
 			}
 		});
-		btnAplicar.setBounds(275, 83, 85, 21);
+		btnAplicar.setBounds(326, 38, 85, 21);
 		getContentPane().add(btnAplicar);
 
 	}

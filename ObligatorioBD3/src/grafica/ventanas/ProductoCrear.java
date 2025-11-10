@@ -47,7 +47,8 @@ public class ProductoCrear extends JInternalFrame {
 	 */
 	public ProductoCrear(boolean isIcon,boolean isClosed,boolean iconable, boolean closable) {
 		super("Crear Producto", isIcon, isClosed, iconable, closable);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 500, 300);
+		
 		getContentPane().setLayout(null);
 		
 		controlador = new ControladorProductoCrear(this);
@@ -61,17 +62,17 @@ public class ProductoCrear extends JInternalFrame {
 		getContentPane().add(lblNewLabel_1);
 		
 		txtCodigo = new JTextField();
-		txtCodigo.setBounds(79, 36, 341, 26);
+		txtCodigo.setBounds(79, 36, 391, 26);
 		getContentPane().add(txtCodigo);
 		txtCodigo.setColumns(10);
 		
 		txtNombre = new JTextField();
-		txtNombre.setBounds(79, 64, 341, 26);
+		txtNombre.setBounds(79, 64, 391, 26);
 		getContentPane().add(txtNombre);
 		txtNombre.setColumns(10);
 		
 		txtPrecio = new JTextField();		
-		txtPrecio.setBounds(79, 92, 341, 26);
+		txtPrecio.setBounds(79, 92, 391, 26);
 		getContentPane().add(txtPrecio);
 		txtPrecio.setColumns(10);
 		
@@ -105,6 +106,9 @@ public class ProductoCrear extends JInternalFrame {
 		});
 		btnNewButton_1.setBounds(174, 219, 117, 29);
 		getContentPane().add(btnNewButton_1);
+		
+		//this.setSize(getContentPane().getWidth(), getContentPane().getHeight());
+
 
 	}
 	

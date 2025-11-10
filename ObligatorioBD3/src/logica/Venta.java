@@ -19,4 +19,7 @@ public class Venta {
 	public String getCliente() {
 		return cliente;
 	}
+	public void setNumero(int numero) {
+        this.numero = numero;
+    }
 }

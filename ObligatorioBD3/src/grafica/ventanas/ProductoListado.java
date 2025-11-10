@@ -95,6 +95,6 @@ public class ProductoListado extends JInternalFrame {
 	
 	public void mostrarError(String mensaje)
 	{
-		JOptionPane.showMessageDialog(this, "Error al registrar el producto: \n" + mensaje);
+		JOptionPane.showMessageDialog(this, "Error al listar los productos: \n" + mensaje);
 	}
 }
