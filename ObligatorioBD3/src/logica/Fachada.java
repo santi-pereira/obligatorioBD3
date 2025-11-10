@@ -181,7 +181,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 		boolean errPer = false;
 		String msgError = "";
 		try {
-			// iConexion = ipool.obtenerConexion(true);
+			iConexion = ipool.obtenerConexion(true);
 			resp = this.daoProducto.listarProductos(iConexion);
 		}catch(Exception e) {
 			errPer = true;
