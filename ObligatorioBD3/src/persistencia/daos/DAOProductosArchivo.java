@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,9 +18,7 @@ import poolConexiones.PoolConexionesArchivo;
 
 public class DAOProductosArchivo implements IDAOProductos {
 
-	  private PoolConexionesArchivo pool;
-
-
+	private PoolConexionesArchivo pool;
 	    
 	private String getRuta() {
 		//devuelve la ruta de la carpeta
@@ -67,7 +64,8 @@ public class DAOProductosArchivo implements IDAOProductos {
     public DAOProductosArchivo() {
         this.pool = new PoolConexionesArchivo();
     }
-	    
+
+    @Override
 	public boolean member(String codP, IConexion iConexion) throws excepcionErrorPersistencia {
 	boolean existe = false;
 	IConexion conexion = null;
@@ -83,7 +81,7 @@ public class DAOProductosArchivo implements IDAOProductos {
 			throw new excepcionErrorPersistencia ("Error en persistencia");
 		} finally {
 			if (conexion != null) {
-				pool.liberarConexion(conexion);
+				pool.liberarConexion(conexion, false);
 			}
 		}
 
@@ -105,7 +103,7 @@ public class DAOProductosArchivo implements IDAOProductos {
             throw new excepcionErrorPersistencia("Error en la persistencia.");
         } finally {
             if (conexion != null) {
-                pool.liberarConexion(conexion);
+                pool.liberarConexion(conexion, false);
             }
         }
     }
@@ -127,7 +125,7 @@ public class DAOProductosArchivo implements IDAOProductos {
 	            throw new excepcionErrorPersistencia("Error en la persistencia.");
 	        } finally {
 	            if (conexion != null) {
-	                pool.liberarConexion(conexion);
+	                pool.liberarConexion(conexion, false);
 	            }
 	        }
 	        return prod;
@@ -148,7 +146,7 @@ public class DAOProductosArchivo implements IDAOProductos {
             throw new excepcionErrorPersistencia("Error en persistencia.");
         } finally {
             if (conexion != null) {
-                pool.liberarConexion(conexion);
+                pool.liberarConexion(conexion, false);
             }
         }
     }
@@ -167,7 +165,7 @@ public class DAOProductosArchivo implements IDAOProductos {
             throw new excepcionErrorPersistencia("Error en persistencia.");
         } finally {
             if (conexion != null) {
-                pool.liberarConexion(conexion);
+                pool.liberarConexion(conexion, false);
             }
         }
         return vacio;
@@ -205,7 +203,7 @@ public class DAOProductosArchivo implements IDAOProductos {
 	        throw new excepcionErrorPersistencia("Error al listar productos.");
 	    } finally {
 	        if (conexion != null)
-	            pool.liberarConexion(conexion);
+	            pool.liberarConexion(conexion, false);
 	    }
 
 	    return resp;
@@ -260,7 +258,7 @@ public class DAOProductosArchivo implements IDAOProductos {
 	        throw new excepcionErrorPersistencia("Error calculando producto más vendido.");
 	    } finally {
 	        if (conexion != null) {
-	            pool.liberarConexion(conexion);
+	            pool.liberarConexion(conexion, false);
 	        }
 	    }
 

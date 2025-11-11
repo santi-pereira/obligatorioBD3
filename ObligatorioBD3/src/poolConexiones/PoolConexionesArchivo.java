@@ -1,7 +1,8 @@
 package poolConexiones;
 
+import logica.excepciones.excepcionErrorPersistencia;
 
-public class PoolConexionesArchivo implements IPoolConexionesArchivo {
+public class PoolConexionesArchivo implements IPoolConexiones {
 
 	private int cantLectores;
     private boolean escribiendo;
@@ -41,14 +42,21 @@ public class PoolConexionesArchivo implements IPoolConexionesArchivo {
     	}
     	return conexion;
     }
-	@Override
-    public synchronized void liberarConexion(IConexion con) {
-    	
-    	this.cantLectores--;
-		if (cantLectores == 0) {
-			notify();
-		}
-    }
 
-	
+	@Override
+	public synchronized void liberarConexion(IConexion con, boolean ok) throws excepcionErrorPersistencia {
+		boolean eraEscritor = false;
+        if (con instanceof ConexionArchivo) {
+            eraEscritor = ((ConexionArchivo) con).getConnection();
+        }
+        if (eraEscritor) {
+            escribiendo = false;
+            notifyAll();
+        } else {
+            cantLectores--;
+            if (cantLectores == 0) {
+                notifyAll();
+            }
+        }
+    }	
 }
