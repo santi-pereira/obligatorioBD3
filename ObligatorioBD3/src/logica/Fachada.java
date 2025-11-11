@@ -142,7 +142,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 		IConexion iConexion = null;
 		VOVenta resp = null;
 		try {
-			iConexion = ipool.obtenerConexion(true);
+			iConexion = ipool.obtenerConexion(false);
 			
 			if (!this.existeProducto(codP, iConexion)) {
 				if (iConexion != null)
@@ -181,7 +181,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 		boolean errPer = false;
 		String msgError = "";
 		try {
-			iConexion = ipool.obtenerConexion(true);
+			iConexion = ipool.obtenerConexion(false);
 			resp = this.daoProducto.listarProductos(iConexion);
 		}catch(Exception e) {
 			errPer = true;
@@ -206,7 +206,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 		Producto producto = null;
 		List<VOVentaTotal> list = null;
 		try {
-			iConexion = ipool.obtenerConexion(true);
+			iConexion = ipool.obtenerConexion(false);
 			if (!this.existeProducto(codProd, iConexion)) {
 				if (iConexion != null)
 					ipool.liberarConexion(iConexion, false);
@@ -230,7 +230,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 		IConexion iConexion = null;
 		VOProdVentas voProdVentas = null;
 		try {
-			iConexion = ipool.obtenerConexion(true);
+			iConexion = ipool.obtenerConexion(false);
 			boolean esVacio = this.daoProducto.esVacio(iConexion);
 			if (esVacio) {
 				if (iConexion != null)
@@ -253,7 +253,7 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 		IConexion iConexion = null;
 		double totalRecaudado = 0;
 		try {
-			iConexion = ipool.obtenerConexion(true);
+			iConexion = ipool.obtenerConexion(false);
 			if (!this.existeProducto(codProd, iConexion)) {
 				if (iConexion != null)
 					ipool.liberarConexion(iConexion, false);
