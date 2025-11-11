@@ -13,7 +13,6 @@ public class FabricaManager {
     public static FabricaAbstracta getFabrica() throws excepcionErrorPersistencia {
     	if (fabrica == null) {
             try {
-
                 Properties p = new Properties();
                 p.load(new FileInputStream("././resources/config.properties"));
                 String claseFabrica = p.getProperty("fabrica");
