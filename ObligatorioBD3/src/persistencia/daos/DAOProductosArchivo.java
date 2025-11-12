@@ -26,40 +26,6 @@ public class DAOProductosArchivo implements IDAOProductos {
 
 	}
 	
-	private int obtenerCantidadVendidaDeArchivo(String codProducto) {
-	    int total = 0;
-
-	    File carpeta = new File(getRuta());
-	    if (!carpeta.exists() || !carpeta.isDirectory()) {
-	        return 0;
-	    }
-
-	    FilenameFilter filtroVentas = (dir, nombre) ->
-	            nombre.startsWith("VENTA-" + codProducto + "-") && nombre.endsWith(".txt");
-
-	    File[] archivosVenta = carpeta.listFiles(filtroVentas);
-
-	    if (archivosVenta == null)
-	        return 0;
-
-	    for (File ventaFile : archivosVenta) {
-	        try (BufferedReader br = new BufferedReader(new FileReader(ventaFile))) {
-	            String numVentaStr = br.readLine();
-	            String codArchivo = br.readLine();
-	            String unidadesStr = br.readLine();
-	            br.readLine();   
-
-	            if (codProducto.equalsIgnoreCase(codArchivo) && unidadesStr != null) {
-	                int unidades = Integer.parseInt(unidadesStr.trim());
-	                total += unidades;
-	            }
-	        } catch (IOException | NumberFormatException e) {
-	            System.err.println("Error leyendo " + ventaFile.getName() + ": " + e.getMessage());
-	        }
-	    }
-
-	    return total;
-	}
 	
     public DAOProductosArchivo() {
         this.pool = new PoolConexionesArchivo();
@@ -68,10 +34,8 @@ public class DAOProductosArchivo implements IDAOProductos {
     @Override
 	public boolean member(String codP, IConexion iConexion) throws excepcionErrorPersistencia {
 	boolean existe = false;
-	IConexion conexion = null;
 
 		try {
-			conexion = pool.obtenerConexion(false);
 			
 			File file = new File(getRuta() + "PROD-" + codP + ".txt");
 			if (file.exists()) {
@@ -79,21 +43,15 @@ public class DAOProductosArchivo implements IDAOProductos {
 			}
 		} catch (Exception e) {
 			throw new excepcionErrorPersistencia ("Error en persistencia");
-		} finally {
-			if (conexion != null) {
-				pool.liberarConexion(conexion, false);
-			}
-		}
+		} 
 
 		return existe;
 	}
 
 	@Override
 	public void insert(Producto producto, IConexion iConexion) throws excepcionErrorPersistencia {
-    IConexion conexion = null;
     
         try {
-            conexion = pool.obtenerConexion(true);
             try (FileWriter writer = new FileWriter(getRuta() + "PROD-" + producto.getCodigo() + ".txt")) {
                 writer.write(producto.getCodigo() + System.lineSeparator());
                 writer.write(producto.getNombre() + System.lineSeparator());
@@ -101,20 +59,14 @@ public class DAOProductosArchivo implements IDAOProductos {
             }
         } catch (IOException e) {
             throw new excepcionErrorPersistencia("Error en la persistencia.");
-        } finally {
-            if (conexion != null) {
-                pool.liberarConexion(conexion, false);
-            }
         }
     }
 
 	@Override
 	public Producto find(String codP, IConexion iConexion) throws excepcionErrorPersistencia {
 	Producto prod = null;
-	IConexion conexion = null;
 	        
 	        try {
-	            conexion = pool.obtenerConexion(false);
 	            try (BufferedReader br = new BufferedReader(new FileReader(getRuta() + "PROD-" + codP + ".txt"))) {
 	                String codigo = br.readLine();
 	                String nombre = br.readLine();
@@ -123,20 +75,14 @@ public class DAOProductosArchivo implements IDAOProductos {
 	            }
 	        } catch (IOException e) {
 	            throw new excepcionErrorPersistencia("Error en la persistencia.");
-	        } finally {
-	            if (conexion != null) {
-	                pool.liberarConexion(conexion, false);
-	            }
-	        }
+	        } 
 	        return prod;
 	    }
 
 	@Override
 	public void delete(String codP, IConexion iConexion) throws excepcionErrorPersistencia {
-    IConexion conexion = null;
     
         try {
-            conexion = pool.obtenerConexion(true);
             
             File file = new File(getRuta() + "PROD-" + codP + ".txt");
             if (file.exists()) {
@@ -144,30 +90,21 @@ public class DAOProductosArchivo implements IDAOProductos {
             }
         } catch (Exception e) {
             throw new excepcionErrorPersistencia("Error en persistencia.");
-        } finally {
-            if (conexion != null) {
-                pool.liberarConexion(conexion, false);
-            }
-        }
+        } 
     }
 
 	@Override
 	public boolean esVacio(IConexion iConexion) throws excepcionErrorPersistencia {
     boolean vacio = true;
-    IConexion conexion = null;
         try {
-            conexion = pool.obtenerConexion(false);
             File carpeta = new File(getRuta());
             FilenameFilter filtro = (dir, nombre) -> nombre.toLowerCase().startsWith("prod-");
             File[] archivos = carpeta.listFiles(filtro);
             vacio = (archivos == null || archivos.length == 0);
         } catch (Exception e) {
             throw new excepcionErrorPersistencia("Error en persistencia.");
-        } finally {
-            if (conexion != null) {
-                pool.liberarConexion(conexion, false);
-            }
-        }
+        } 
+        
         return vacio;
     }
 
@@ -175,10 +112,7 @@ public class DAOProductosArchivo implements IDAOProductos {
 	public List<VOProducto> listarProductos(IConexion iConexion) throws excepcionErrorPersistencia {
 		List<VOProducto> resp = new ArrayList<VOProducto>();
 		
-		IConexion conexion = null;
-
 	    try {
-	        conexion = pool.obtenerConexion(false);
 
 	        File carpeta = new File(getRuta());
 	        if (carpeta.exists() && carpeta.isDirectory()) {
@@ -190,7 +124,7 @@ public class DAOProductosArchivo implements IDAOProductos {
 	                    String cod = archivo.getName()
 	                                        .replace("PROD-", "")
 	                                        .replace(".txt", "");
-	                    Producto p = find(cod, conexion);
+	                    Producto p = find(cod, iConexion);
 	                    if (p != null) {
 	                        resp.add(new VOProducto(p.getCodigo(), p.getNombre(), p.getPrecio()));
 	                    }
@@ -201,21 +135,16 @@ public class DAOProductosArchivo implements IDAOProductos {
 	        }
 	    } catch (Exception e) {
 	        throw new excepcionErrorPersistencia("Error al listar productos.");
-	    } finally {
-	        if (conexion != null)
-	            pool.liberarConexion(conexion, false);
-	    }
+	    } 
 
 	    return resp;
 	}
 
 	@Override
 	public VOProdVentas productoMasVendido(IConexion iConexion) throws excepcionErrorPersistencia {
-	    IConexion conexion = null;
 	    VOProdVentas masVendido = null;
 
 	    try {
-	        conexion = pool.obtenerConexion(false);
 
 	        File carpeta = new File(getRuta());
 	        if (!carpeta.exists() || !carpeta.isDirectory()) {
@@ -236,12 +165,14 @@ public class DAOProductosArchivo implements IDAOProductos {
 	            String codProducto = archProd.getName()
 	                    .replace("PROD-", "")
 	                    .replace(".txt", "");
-
-	            int cantidadVendida = obtenerCantidadVendidaDeArchivo(codProducto);
+	            
+	            Producto prod = find(codProducto, iConexion);
+	            
+	            int cantidadVendida = prod.cantidadVentas(iConexion);
 
 	            if (cantidadVendida > maxCantidadVendida) {
 	                maxCantidadVendida = cantidadVendida;
-	                productoMasVendido = find(codProducto, conexion);
+	                productoMasVendido = find(codProducto, iConexion);
 	            }
 	        }
 
@@ -256,11 +187,7 @@ public class DAOProductosArchivo implements IDAOProductos {
 
 	    } catch (Exception e) {
 	        throw new excepcionErrorPersistencia("Error calculando producto más vendido.");
-	    } finally {
-	        if (conexion != null) {
-	            pool.liberarConexion(conexion, false);
-	        }
-	    }
+	    } 
 
 	    return masVendido;
 	}
