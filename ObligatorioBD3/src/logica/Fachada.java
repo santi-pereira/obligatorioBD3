@@ -42,6 +42,8 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 	public void altaProducto(VOProducto VoP) throws RemoteException, exceptionExisteCodigoProducto, excepcionErrorPersistencia {
 		IConexion iConexion = null;
 		boolean altaProdOK = false;
+		excepcionErrorPersistencia errorPers = null;
+		
 		try {
 			iConexion = ipool.obtenerConexion(true);
 			if (this.existeProducto(VoP.getCodigo(), iConexion)) {
@@ -53,11 +55,16 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 			this.daoProducto.insert(producto, iConexion);
 			altaProdOK = true;
 		} catch (excepcionErrorPersistencia e) {
-			throw new excepcionErrorPersistencia("Error con la persistencia");
+			errorPers = e;
 		} finally {
 			if (iConexion != null) {
 				ipool.liberarConexion(iConexion, altaProdOK);
 	        }
+			
+			if(errorPers !=null)
+			{
+				throw errorPers;
+			}
 		}
 	}
 
@@ -77,9 +84,9 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 				producto.borrarVentas(iConexion);
 				this.daoProducto.delete(codP, iConexion);
 			}
-		} catch (Exception e) {
+		} catch (excepcionErrorPersistencia e) {
 			errorPersistencia = true;
-			msgError = "Error de acceso a los datos.";
+			msgError = e.getMessage();
 		}finally {
 			if(!existProd)
 			{
@@ -109,6 +116,8 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 	@Override
 	public void registroVenta(String codP, VOVenta voV) throws RemoteException, exceptionNoExisteProducto, excepcionErrorPersistencia {
 		IConexion iConexion = null;
+		excepcionErrorPersistencia errPers = null;
+		
 		try {
 			iConexion = ipool.obtenerConexion(true);
 			if (!this.existeProducto(codP, iConexion)) {
@@ -122,10 +131,14 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 				ipool.liberarConexion(iConexion, true);
 			}
 		} catch (excepcionErrorPersistencia ePersistencia) {
+			errPers = ePersistencia;	
+		}finally {
 			if (iConexion != null) {
 				ipool.liberarConexion(iConexion, false);
-				throw new excepcionErrorPersistencia("Error con la persistencia");
 			}
+			
+			if(errPers != null)
+				throw new excepcionErrorPersistencia("Error con la persistencia");	
 		}
 	}
 
@@ -141,6 +154,8 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 	{
 		IConexion iConexion = null;
 		VOVenta resp = null;
+		excepcionErrorPersistencia errPers = null;
+		
 		try {
 			iConexion = ipool.obtenerConexion(false);
 			
@@ -160,9 +175,13 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 			ipool.liberarConexion(iConexion, true);
 			resp = new VOVenta(venta.getUnidades(), venta.getCliente());
 		} catch (excepcionErrorPersistencia ePersistencia) {
+			errPers = ePersistencia;
+		}finally {
 			if (iConexion != null)
 				ipool.liberarConexion(iConexion, false);
-			throw new excepcionErrorPersistencia("Error con la persistencia");
+			
+			if(errPers != null)
+				throw new excepcionErrorPersistencia("Error con la persistencia");
 		}
 
 		return resp;
@@ -180,10 +199,12 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 		List<VOProducto> resp = null;
 		boolean errPer = false;
 		String msgError = "";
+		
+		
 		try {
 			iConexion = ipool.obtenerConexion(false);
 			resp = this.daoProducto.listarProductos(iConexion);
-		}catch(Exception e) {
+		}catch(excepcionErrorPersistencia e) {
 			errPer = true;
 			msgError ="Error de acceso a los datos.";
 		} finally {
@@ -205,6 +226,8 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 		IConexion iConexion = null;
 		Producto producto = null;
 		List<VOVentaTotal> list = null;
+		excepcionErrorPersistencia errPers = null;
+		
 		try {
 			iConexion = ipool.obtenerConexion(false);
 			if (!this.existeProducto(codProd, iConexion)) {
@@ -215,16 +238,23 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 			producto = this.daoProducto.find(codProd, iConexion);
 			list = producto.listarVentas(iConexion);
 			ipool.liberarConexion(iConexion, true);
-		} catch (Exception e) {
-			e.printStackTrace(); 
+		} catch (excepcionErrorPersistencia e) {
+			errPers = e;
+		}finally {
+			
+		
 			if (iConexion != null)
 				ipool.liberarConexion(iConexion, false);
-			throw new excepcionErrorPersistencia("Error con la persistencia");
+			
+			if(errPers != null)
+				throw new excepcionErrorPersistencia("Error con la persistencia");
 		}
 
 		return list;
 	}
 
+	
+	//falta corregir desde aca
 	@Override
 	public VOProdVentas productoMasUnidadesVendidas() throws RemoteException, excepcionErrorPersistencia, exceptionNoExisteProducto {
 		IConexion iConexion = null;
