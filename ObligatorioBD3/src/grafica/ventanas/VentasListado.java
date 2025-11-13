@@ -64,6 +64,11 @@ public class VentasListado extends JInternalFrame {
 		
 		JButton btnCancelar = new JButton("Cerrar");
 		btnCancelar.setBounds(335, 227, 85, 21);
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			dispose();
+			}});
+			
 		getContentPane().add(btnCancelar);
 		
 		JButton btnListarVentas = new JButton("Listar Ventas");
