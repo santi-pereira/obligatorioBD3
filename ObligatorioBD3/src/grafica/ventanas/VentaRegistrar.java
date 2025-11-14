@@ -68,6 +68,16 @@ public class VentaRegistrar extends JInternalFrame {
 		textField_unidades.setBounds(146, 59, 287, 26);
 		getContentPane().add(textField_unidades);
 		
+		textField_unidades.addKeyListener(new java.awt.event.KeyAdapter() {
+		    @Override
+		    public void keyTyped(java.awt.event.KeyEvent e) {
+		        char c = e.getKeyChar();
+		        if (!Character.isDigit(c) && c != '\b') {
+		            e.consume();
+		        }
+		    }
+		});
+		
 		textField_cliente = new JTextField();
 		textField_cliente.setColumns(10);
 		textField_cliente.setBounds(146, 87, 287, 26);
