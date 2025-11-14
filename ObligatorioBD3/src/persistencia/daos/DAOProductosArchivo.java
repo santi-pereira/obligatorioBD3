@@ -13,6 +13,7 @@ import logica.Producto;
 import logica.excepciones.excepcionErrorPersistencia;
 import logica.valueObjects.VOProdVentas;
 import logica.valueObjects.VOProducto;
+import logica.valueObjects.VOVentaTotal;
 import poolConexiones.IConexion;
 import poolConexiones.PoolConexionesArchivo;
 
@@ -168,7 +169,13 @@ public class DAOProductosArchivo implements IDAOProductos {
 	            
 	            Producto prod = find(codProducto, iConexion);
 	            
-	            int cantidadVendida = prod.cantidadVentas(iConexion);
+	            int cantidadVendida = 0;
+	            
+	            for (VOVentaTotal venta : prod.listarVentas(iConexion)) {
+	            	cantidadVendida += venta.getUnidades();
+				}
+	            
+	          
 
 	            if (cantidadVendida > maxCantidadVendida) {
 	                maxCantidadVendida = cantidadVendida;
