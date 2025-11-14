@@ -19,7 +19,7 @@ public class DAOVentasArchivo implements IDAOVentas {
     private static final String FILE_PREFIX = "VENTA-";
     private static final String FILE_SUFFIX = ".txt";
 
-    // constructor 
+    //constructor 
     public DAOVentasArchivo(String codProd) {
         this.codProd = codProd;
     }
