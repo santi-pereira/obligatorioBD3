@@ -117,12 +117,29 @@ public class VentaRegistrar extends JInternalFrame {
 			String cliente = textField_cliente.getText();
 			
 			if(controlador.CrearVenta(codigo, unidades, cliente)) {
-				JOptionPane.showMessageDialog(this, "Se registro la venta de forma exitosa");
+				int opcion = JOptionPane.showConfirmDialog(
+				        this,
+				        "Se registro la venta de forma exitosa",
+				        "Información",
+				        JOptionPane.DEFAULT_OPTION,
+				        JOptionPane.INFORMATION_MESSAGE
+				);
+				if (opcion == JOptionPane.OK_OPTION) {
+				    limpiarCampos();
+				}
 			}
 		}
 	}
 		
 	
+	private void limpiarCampos() {
+		textField_codigo.setText("");
+		textField_unidades.setText("");
+		textField_cliente.setText("");
+	    
+		textField_codigo.requestFocus(); // vuelve a enfocar el primer campo
+	}
+
 	public void mostrarError(String mensaje)
 	{
 		JOptionPane.showMessageDialog(this, "Error al registrar la venta: \n" + mensaje);

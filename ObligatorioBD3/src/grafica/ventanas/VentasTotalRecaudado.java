@@ -82,6 +82,7 @@ public class VentasTotalRecaudado extends JInternalFrame {
 					}
 					else {
 						total = controlador.totalRecaudadoPorVentas(codP);
+						limpiarDatos();
 						lblTotalVtasRecaudado.setText(String.valueOf(total));
 					}
 			}
@@ -91,6 +92,12 @@ public class VentasTotalRecaudado extends JInternalFrame {
 
 	}
 	
+	protected void limpiarDatos() {
+		textCodigoProducto.setText("");
+	    
+		textCodigoProducto.requestFocus(); // vuelve a enfocar el primer campo
+	}
+
 	public void mostrarError(String mensaje)
 	{
 		JOptionPane.showMessageDialog(this, "Error: \n" + mensaje);

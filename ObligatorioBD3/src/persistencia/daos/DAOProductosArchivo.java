@@ -6,6 +6,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,21 +18,30 @@ import logica.valueObjects.VOProdVentas;
 import logica.valueObjects.VOProducto;
 import logica.valueObjects.VOVentaTotal;
 import poolConexiones.IConexion;
-import poolConexiones.PoolConexionesArchivo;
 
 public class DAOProductosArchivo implements IDAOProductos {
-
-	private PoolConexionesArchivo pool;
 	    
 	private String getRuta() {
-		//devuelve la ruta de la carpeta
-		return "./";
+		String carpeta = "persistenciaArchivo";
 
+	    try {
+	        Path dir = Paths.get(carpeta);
+
+	        // Crea la carpeta y subcarpetas si no existen
+	        if (!Files.exists(dir)) {
+	            Files.createDirectories(dir);
+	        }
+
+	        // Devuelve ruta absoluta
+	        return dir.toAbsolutePath().toString() + File.separator;
+
+	    } catch (IOException e) {
+	        throw new RuntimeException("No se pudo crear la carpeta de persistencia", e);
+	    }
 	}
 	
 	
     public DAOProductosArchivo() {
-        this.pool = new PoolConexionesArchivo();
     }
 
     @Override

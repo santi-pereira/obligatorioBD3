@@ -1,7 +1,6 @@
 package logica;
 
 import java.rmi.RemoteException;
-import java.util.List;
 
 import logica.excepciones.excepcionErrorPersistencia;
 import logica.excepciones.exceptionExisteCodigoProducto;

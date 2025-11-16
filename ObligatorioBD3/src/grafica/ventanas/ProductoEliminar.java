@@ -85,7 +85,16 @@ public class ProductoEliminar extends JInternalFrame {
 		
 				if(controlador.EliminarProducto(cod))
 				{
-					JOptionPane.showMessageDialog(this, "Se borró el producto de forma exitosa");
+					int opcion = JOptionPane.showConfirmDialog(
+					        this,
+					        "Se borró el producto de forma exitosa",
+					        "Información",
+					        JOptionPane.DEFAULT_OPTION,
+					        JOptionPane.INFORMATION_MESSAGE
+					);
+					if (opcion == JOptionPane.OK_OPTION) {
+					    limpiarCampos();
+					}
 				}
 			
 			}else
@@ -96,6 +105,12 @@ public class ProductoEliminar extends JInternalFrame {
 		
 	}
 	
+	private void limpiarCampos() {
+		textFieldCodigoProducto.setText("");
+	    
+		textFieldCodigoProducto.requestFocus(); // vuelve a enfocar el primer campo
+	}
+
 	public void mostrarError(String mensaje)
 	{
 		JOptionPane.showMessageDialog(this, "Error al borrar el producto: \n" + mensaje);
