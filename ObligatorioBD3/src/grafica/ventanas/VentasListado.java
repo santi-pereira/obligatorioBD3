@@ -88,6 +88,7 @@ public class VentasListado extends JInternalFrame {
 			                model.addRow(rowData);
 			            }
 			        }
+			        limpiarDatos();
 		}});
 		
 		getContentPane().add(btnListarVentas);
@@ -113,6 +114,12 @@ public class VentasListado extends JInternalFrame {
 		//scrollPane.setColumnHeaderView(table);
 
 	
+	}
+
+	protected void limpiarDatos() {
+		textCodProd.setText("");
+	    
+		textCodProd.requestFocus(); // vuelve a enfocar el primer campo
 	}
 
 	public void mostrarError(String mensaje)
