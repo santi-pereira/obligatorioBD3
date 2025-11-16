@@ -129,13 +129,12 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 				int numVenta = producto.cantidadVentas(iConexion) + 1;
 				Venta venta = new Venta(numVenta, voV.getUnidades(), voV.getCliente());
 				producto.agregarVenta(venta, iConexion);
-				ipool.liberarConexion(iConexion, true);
 			}
 		} catch (excepcionErrorPersistencia ePersistencia) {
 			errPers = ePersistencia;
 		} finally {
 			if (iConexion != null) {
-				ipool.liberarConexion(iConexion, false);
+				ipool.liberarConexion(iConexion, errPers == null);
 			}
 
 			if (errPers != null)
@@ -173,13 +172,12 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 					ipool.liberarConexion(iConexion, false);
 				throw new exceptionNoExisteVenta("No existe una venta con el codigo y numero indicado");
 			}
-			ipool.liberarConexion(iConexion, true);
 			resp = new VOVenta(venta.getUnidades(), venta.getCliente());
 		} catch (excepcionErrorPersistencia ePersistencia) {
 			errPers = ePersistencia;
 		} finally {
 			if (iConexion != null)
-				ipool.liberarConexion(iConexion, false);
+				ipool.liberarConexion(iConexion, errPers == null);
 
 			if (errPers != null)
 				throw new excepcionErrorPersistencia("Error con la persistencia");
@@ -237,13 +235,12 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 			}
 			producto = this.daoProducto.find(codProd, iConexion);
 			list = producto.listarVentas(iConexion);
-			ipool.liberarConexion(iConexion, true);
 		} catch (excepcionErrorPersistencia e) {
 			errPers = e;
 		} finally {
 
 			if (iConexion != null)
-				ipool.liberarConexion(iConexion, false);
+				ipool.liberarConexion(iConexion, errPers == null);
 
 			if (errPers != null)
 				throw new excepcionErrorPersistencia("Error con la persistencia");
@@ -269,14 +266,13 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 				throw new exceptionNoExisteProducto("No existe ningun producto registrado en el sistema.");
 			}
 			voProdVentas = this.daoProducto.productoMasVendido(iConexion);
-			ipool.liberarConexion(iConexion, true);
 		} catch (excepcionErrorPersistencia ex) {
 
 			errPers = ex;
 		} finally {
 
 			if (iConexion != null)
-				ipool.liberarConexion(iConexion, false);
+				ipool.liberarConexion(iConexion, errPers == null);
 
 			if (errPers != null)
 				throw errPers;
@@ -301,14 +297,13 @@ public class Fachada extends UnicastRemoteObject implements IFachada {
 			}
 			Producto producto = this.daoProducto.find(codProd, iConexion);
 			totalRecaudado = producto.totalRecaudado(iConexion);
-			ipool.liberarConexion(iConexion, true);
 		} catch (excepcionErrorPersistencia ex) {
 
 			errPers = ex;
 		} finally {
 
 			if (iConexion != null)
-				ipool.liberarConexion(iConexion, false);
+				ipool.liberarConexion(iConexion, errPers == null);
 
 			if (errPers != null)
 				throw errPers;

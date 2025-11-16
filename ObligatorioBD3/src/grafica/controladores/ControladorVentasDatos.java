@@ -7,7 +7,6 @@ import grafica.ventanas.VentasDatos;
 import logica.excepciones.excepcionErrorPersistencia;
 import logica.excepciones.exceptionNoExisteProducto;
 import logica.excepciones.exceptionNoExisteVenta;
-import logica.valueObjects.VOProdVentas;
 import logica.valueObjects.VOVenta;
 
 public class ControladorVentasDatos extends ConexionRMI {
