@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JInternalFrame;
 
-import grafica.controladores.ControladorVentaRegistrar;
 import grafica.controladores.ControladorVentasDatos;
 import logica.valueObjects.VOVenta;
 
@@ -14,8 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import java.awt.Panel;
-import javax.swing.JPanel;
 import java.awt.Label;
 
 public class VentasDatos extends JInternalFrame {
@@ -74,7 +71,7 @@ public class VentasDatos extends JInternalFrame {
 		btnMostrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				mostrarDatos();
-				
+				limpiarDatos();				
 			}
 		});
 		btnMostrar.setBounds(336, 94, 117, 29);
@@ -129,6 +126,13 @@ public class VentasDatos extends JInternalFrame {
 	}
 	
 	
+	protected void limpiarDatos() {
+		textField_codigo.setText("");
+	    textField_numero.setText("");
+	    
+	    textField_codigo.requestFocus(); // vuelve a enfocar el primer campo
+	}
+
 	public void mostrarDatos() {
 		
 		if (textField_codigo.getText().isEmpty()){

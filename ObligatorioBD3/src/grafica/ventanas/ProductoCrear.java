@@ -10,10 +10,8 @@ import javax.swing.JTextField;
 import grafica.controladores.ControladorProductoCrear;
 
 import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
 
 import java.awt.event.ActionListener;
-import java.text.NumberFormat;
 import java.awt.event.ActionEvent;
 
 public class ProductoCrear extends JInternalFrame {
@@ -106,10 +104,6 @@ public class ProductoCrear extends JInternalFrame {
 		});
 		btnNewButton_1.setBounds(174, 219, 117, 29);
 		getContentPane().add(btnNewButton_1);
-		
-		//this.setSize(getContentPane().getWidth(), getContentPane().getHeight());
-
-
 	}
 	
 	public void registrarProducto()
@@ -124,21 +118,35 @@ public class ProductoCrear extends JInternalFrame {
 			
 			if(controlador.CrearProducto(cod, nombre, precio))
 			{
-				JOptionPane.showMessageDialog(this, "Se registro el producto de forma exitosa");
+				int opcion = JOptionPane.showConfirmDialog(
+				        this,
+				        "Se registró el producto de forma exitosa",
+				        "Información",
+				        JOptionPane.DEFAULT_OPTION,
+				        JOptionPane.INFORMATION_MESSAGE
+				);
+				if (opcion == JOptionPane.OK_OPTION) {
+				    limpiarCampos();
+				}
 			}
 			
-		}else
-		{
+		} else {
 			mostrarError("Se tiene que indicar el precio del producto.");
 		}
 		
 		
 	}
 	
+	private void limpiarCampos() {
+		txtCodigo.setText("");
+	    txtNombre.setText("");
+	    txtPrecio.setText("");
+	    
+	    txtCodigo.requestFocus(); // vuelve a enfocar el primer campo
+	}
+
 	public void mostrarError(String mensaje)
 	{
 		JOptionPane.showMessageDialog(this, "Error al registrar el producto: \n" + mensaje);
 	}
-	
-	
 }

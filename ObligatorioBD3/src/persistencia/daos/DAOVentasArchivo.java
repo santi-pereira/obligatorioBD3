@@ -16,25 +16,38 @@ import poolConexiones.IConexion;
 public class DAOVentasArchivo implements IDAOVentas {
 	
 	private String codProd;
+    private static final String BASE_DIR = "persistenciaArchivo";
     private static final String FILE_PREFIX = "VENTA-";
     private static final String FILE_SUFFIX = ".txt";
 
     //constructor 
     public DAOVentasArchivo(String codProd) {
         this.codProd = codProd;
+        crearDirectorioBase();
     }
 
     // --- MÉTODOS AUXILIARES PRIVADOS ---
 
-    // Genera el nombre de archivo según la convención: VENTA-Pul001-1.txt
+    private void crearDirectorioBase() {
+    	File dir = new File(BASE_DIR);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+	}
+
+	// Genera el nombre de archivo según la convención: VENTA-Pul001-1.txt
     private String getFileName(int numVenta) {
         return FILE_PREFIX + this.codProd + "-" + numVenta + FILE_SUFFIX;
     }
 
+    // --- Obtener archivo en el directorio correcto ---
+    private File getFile(int numVenta) {
+        return new File(BASE_DIR, getFileName(numVenta));
+    }
+
     // Persiste los datos de una Venta en un archivo
     private void escribirVentaEnArchivo(Venta venta) throws excepcionErrorPersistencia {
-        String fileName = getFileName(venta.getNumero());
-        File file = new File(fileName);
+        File file = getFile(venta.getNumero());
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
             bw.write(String.valueOf(venta.getNumero())); 
@@ -46,14 +59,13 @@ public class DAOVentasArchivo implements IDAOVentas {
             bw.write(venta.getCliente());
             bw.newLine();
         } catch (IOException e) {
-            throw new excepcionErrorPersistencia("Error al escribir la venta en el archivo: " + fileName);
+            throw new excepcionErrorPersistencia("Error al escribir la venta en el archivo: " + file.getAbsolutePath());
         }
     }
 
     // Lee los datos de una Venta desde un archivo
     private Venta leerVentaDesdeArchivo(int numVenta) throws excepcionErrorPersistencia {
-        String fileName = getFileName(numVenta);
-        File file = new File(fileName);
+        File file = getFile(numVenta);
         
         if (!file.exists()) {
             return null;
@@ -68,14 +80,14 @@ public class DAOVentasArchivo implements IDAOVentas {
             return new Venta(numero, unidades, cliente); 
 
         } catch (IOException | NumberFormatException e) {
-            throw new excepcionErrorPersistencia("Error al leer la venta del archivo: " + fileName);
+            throw new excepcionErrorPersistencia("Error al leer la venta del archivo: " + file.getAbsolutePath());
         }
     }
 
     // Obtiene el siguiente numero de venta
     private int getNextNumeroVenta() {
         int maxNum = 0;
-        File currentDir = new File("."); 
+        File currentDir = new File(BASE_DIR); 
         File[] files = currentDir.listFiles((dir, name) -> 
             name.startsWith(FILE_PREFIX + this.codProd + "-") && name.endsWith(FILE_SUFFIX)
         );
@@ -119,7 +131,7 @@ public class DAOVentasArchivo implements IDAOVentas {
 
     @Override
     public void borrarVenta(IConexion iConexion) throws excepcionErrorPersistencia {  
-        File currentDir = new File(".");
+        File currentDir = new File(BASE_DIR);
         File[] files = currentDir.listFiles((dir, name) -> 
             name.startsWith(FILE_PREFIX + this.codProd + "-") && name.endsWith(FILE_SUFFIX)
         );

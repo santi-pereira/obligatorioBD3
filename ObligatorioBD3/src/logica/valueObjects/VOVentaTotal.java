@@ -3,6 +3,10 @@ package logica.valueObjects;
 import java.io.Serializable;
 
 public class VOVentaTotal extends VOVenta implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	int numero;
 	String codProd;
 	
